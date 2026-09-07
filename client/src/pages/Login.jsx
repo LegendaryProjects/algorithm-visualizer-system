@@ -9,12 +9,13 @@ export default function Login() {
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const { login } = useAuth();
+  const { login, sessionNotice, clearSessionNotice } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
+    clearSessionNotice();
     setIsSubmitting(true);
     try {
       await login(credential, password, role);
@@ -64,6 +65,19 @@ export default function Login() {
           Admin
         </button>
       </div>
+
+      {sessionNotice && (
+        <div className="mb-4 text-xs font-medium text-amber-300 bg-amber-950/40 border border-amber-800/50 px-3 py-2.5 rounded flex items-center justify-between">
+          <span>{sessionNotice}</span>
+          <button
+            type="button"
+            onClick={clearSessionNotice}
+            className="text-amber-400 hover:text-amber-200 ml-2 text-base leading-none cursor-pointer"
+          >
+            ×
+          </button>
+        </div>
+      )}
 
       {error && (
         <div className="mb-4 text-xs font-medium text-red-400 bg-red-950/40 border border-red-900/50 px-3 py-2.5 rounded">
