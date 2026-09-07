@@ -27,15 +27,15 @@ export const AuthProvider = ({ children }) => {
     fetchUser();
   }, []);
 
-  const login = async (credential, password) => {
-    const response = await api.post('/auth/login', { credential, password });
+  const login = async (credential, password, role = 'learner') => {
+    const response = await api.post('/auth/login', { credential, password, role });
     localStorage.setItem('token', response.data.token);
     setUser(response.data.user);
     return response.data;
   };
 
-  const register = async (username, email, password) => {
-    const response = await api.post('/auth/register', { username, email, password });
+  const register = async (username, email, password, role = 'learner') => {
+    const response = await api.post('/auth/register', { username, email, password, role });
     localStorage.setItem('token', response.data.token);
     setUser(response.data.user);
     return response.data;

@@ -7,11 +7,13 @@ const hashToken = (token) => crypto.createHash('sha256').update(token).digest('h
 
 
 export const register = async (req, res) => {
-  const { username, email, password } = req.body;
+  const { username, email, password, role } = req.body;
 
   if (!username || !email || !password) {
     return res.status(400).json({ error: 'All fields are required.' });
   }
+
+  const assignedRole = role === 'admin' ? 'admin' : 'learner';
 
   try {
     const userCheck = await pool.query(
@@ -28,9 +30,9 @@ export const register = async (req, res) => {
 
     const newUser = await pool.query(
       `INSERT INTO users (username, email, password_hash, role)
-       VALUES ($1, $2, $3, 'learner')
+       VALUES ($1, $2, $3, $4)
        RETURNING id, username, email, role, created_at`,
-      [username, email, passwordHash]
+      [username, email, passwordHash, assignedRole]
     );
 
     const token = jwt.sign(
@@ -58,7 +60,7 @@ export const register = async (req, res) => {
 };
 
 export const login = async (req, res) => {
-  const { credential, password } = req.body;
+  const { credential, password, role } = req.body;
 
   if (!credential || !password) {
     return res.status(400).json({ error: 'Username/email and password required.' });
@@ -79,6 +81,14 @@ export const login = async (req, res) => {
 
     if (!isMatch) {
       return res.status(401).json({ error: 'Invalid credentials.' });
+    }
+
+    if (role && user.role !== role) {
+      const userRoleDisplay = user.role.charAt(0).toUpperCase() + user.role.slice(1);
+      const targetRoleDisplay = role.charAt(0).toUpperCase() + role.slice(1);
+      return res.status(403).json({ 
+        error: `Account is registered as ${userRoleDisplay}, not ${targetRoleDisplay}. Please switch to the ${userRoleDisplay} tab.` 
+      });
     }
 
     const token = jwt.sign(
