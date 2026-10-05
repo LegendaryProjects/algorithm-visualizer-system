@@ -28,7 +28,7 @@ export default function AuthLayout({ children }) {
           </h1>
 
           <div className="text-center text-sm sm:text-base text-gray-400 max-w-2xl mt-4 italic leading-relaxed">
-            In the guidance of <span className="text-gray-200 font-medium not-italic">Professor Jaidhar C</span>,<br />
+            In the guidance of <span className="text-gray-200 font-medium not-italic">Professor Jaidhar C D</span>,<br />
             Department of Information Technology,<br />
             National Institute of Technology Karnataka, Surathkal
           </div>
