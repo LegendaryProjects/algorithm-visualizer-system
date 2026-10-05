@@ -50,4 +50,4 @@ npm start
 - Sagar Hiremath (241IT067)
 - Santosh Gouda (241IT070)
 
-Under the guidance of Professor Jaidhar C, Department of Information Technology, National Institute of Technology Karnataka, Surathkal.
+Under the guidance of Professor Jaidhar C D, Department of Information Technology, National Institute of Technology Karnataka, Surathkal.
