@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback } from 'react';
 import { algorithms as localAlgorithms } from '../algorithms';
+import api from '../services/api';
 
 import { useTTS } from './useTTS';
 
@@ -24,9 +25,9 @@ export const useSimulationEngine = () => {
 
   // Fetch algorithms metadata and input schemas from API
   useEffect(() => {
-    fetch('http://localhost:5555/api/algorithms')
-      .then(res => res.json())
-      .then(data => {
+    api.get('/algorithms')
+      .then(res => {
+         const data = res.data;
          setApiAlgorithms(data);
          setLoading(false);
          const initialAlgo = data.find(a => a.id === 'binarySearch');

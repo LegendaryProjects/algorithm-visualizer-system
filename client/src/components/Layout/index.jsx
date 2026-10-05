@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { algorithmList } from '../../algorithms';
 import Canvas from '../Canvas';
 import CodePanel from '../CodePanel';
@@ -6,10 +6,15 @@ import ExplanationPanel from '../Explanation';
 import StatePanel from '../StatePanel';
 import Controls from '../Controls';
 import { useSimulationEngine } from '../../hooks/useSimulationEngine';
-import { UserCircle, Search } from 'lucide-react';
+import { Bookmark, Search } from 'lucide-react';
+import { useAuth } from '../../context/AuthContext';
+import api from '../../services/api';
 
 const Layout = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const { user } = useAuth();
+  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [maxStepReached, setMaxStepReached] = useState(0);
 
   const {
     apiAlgorithms,
@@ -37,6 +42,55 @@ const Layout = () => {
   // Fallback to local list if API is loading or fails
   const displayAlgorithms = apiAlgorithms.length > 0 ? apiAlgorithms : algorithmList;
   const currentApiAlgo = apiAlgorithms.find(a => a.id === selectedAlgoId);
+
+  // Check bookmark status when algorithm changes
+  useEffect(() => {
+    if (!user) return;
+    api.get(`/progress/bookmarks/${user.id}`)
+      .then(res => {
+        const pinned = res.data.some(b => b.algo_id === selectedAlgoId);
+        setIsBookmarked(pinned);
+      })
+      .catch(console.error);
+    
+    // Reset max step for new algorithm
+    setMaxStepReached(0);
+  }, [selectedAlgoId, user]);
+
+  // Track progress as steps change
+  useEffect(() => {
+    if (currentStepIndex > maxStepReached) {
+      setMaxStepReached(currentStepIndex);
+    }
+  }, [currentStepIndex, maxStepReached]);
+
+  // Sync progress when leaving algorithm or finishing
+  useEffect(() => {
+    if (!user || steps.length === 0 || maxStepReached === 0) return;
+    
+    // If we reached the end, completion is 100%, else calculate percentage
+    const completionPct = maxStepReached >= steps.length - 1 ? 100 : Math.round((maxStepReached / steps.length) * 100);
+    
+    // Debounce or sync when finished
+    if (maxStepReached === steps.length - 1) {
+       api.post('/progress/update', {
+         user_id: user.id,
+         algo_id: selectedAlgoId,
+         completion_pct: completionPct,
+         steps_viewed: maxStepReached
+       }).catch(console.error);
+    }
+  }, [maxStepReached, steps.length, selectedAlgoId, user]);
+
+  const toggleBookmark = async () => {
+    if (!user) return;
+    try {
+      const res = await api.post('/progress/bookmarks/toggle', { user_id: user.id, algo_id: selectedAlgoId });
+      setIsBookmarked(res.data.status === 'added');
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const handleInputChange = (inputName, val, type) => {
     let parsedVal = val;
@@ -79,8 +133,12 @@ const Layout = () => {
         </div>
         
         <div className="flex justify-end flex-1 pr-2">
-          <button className="text-gray-300 hover:text-white transition-colors">
-            <UserCircle size={28} />
+          <button 
+            onClick={toggleBookmark}
+            className={`transition-colors p-2 rounded-full ${isBookmarked ? 'bg-pink-500/20 text-pink-400' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+            title={isBookmarked ? 'Remove Bookmark' : 'Bookmark Algorithm'}
+          >
+            <Bookmark size={24} fill={isBookmarked ? 'currentColor' : 'none'} />
           </button>
         </div>
       </nav>

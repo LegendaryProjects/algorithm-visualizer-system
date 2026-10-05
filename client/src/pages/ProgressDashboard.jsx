@@ -14,6 +14,7 @@ function formatDate(iso) {
 export default function ProgressDashboard() {
   const [bookmarks, setBookmarks] = useState([]);
   const [history, setHistory] = useState([]);
+  const [targetUserInfo, setTargetUserInfo] = useState(null);
   const { user } = useAuth();
   const { userId: routeUserId } = useParams();
   
@@ -24,8 +25,18 @@ export default function ProgressDashboard() {
     if (targetUserId) {
       fetchBookmarks();
       fetchHistory();
+      fetchTargetUser();
     }
   }, [targetUserId]);
+
+  const fetchTargetUser = async () => {
+    try {
+      const res = await api.get(`/progress/user/${targetUserId}`);
+      setTargetUserInfo(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
 
   const fetchBookmarks = async () => {
     try {
@@ -125,14 +136,13 @@ export default function ProgressDashboard() {
         {/* Header */}
         <div className="pane rounded-3xl px-7 py-8 sm:px-9 sm:py-9 mb-6">
           <p className="text-xs tracking-wide mb-3" style={{ color: 'rgba(255,255,255,0.55)' }}>
-            Learning dashboard · user 001
+            Learning dashboard · {targetUserInfo?.username || 'Loading...'}
           </p>
           <h1 className="display gradient-text text-4xl sm:text-5xl font-semibold mb-2 leading-tight">
-            Your progress, in focus
+            {targetUserInfo?.id === user?.id ? 'Your progress, in focus' : `${targetUserInfo?.username}'s progress`}
           </h1>
           <p className="text-[15px] max-w-md" style={{ color: 'rgba(255,255,255,0.6)' }}>
-            Every algorithm you've opened, finished, or set aside — gathered
-            in one clear view.
+            {targetUserInfo?.id === user?.id ? "Every algorithm you've opened, finished, or set aside — gathered in one clear view." : "Every algorithm they've opened, finished, or set aside — gathered in one clear view."}
           </p>
         </div>
 
