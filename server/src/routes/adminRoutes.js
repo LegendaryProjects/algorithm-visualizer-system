@@ -44,4 +44,36 @@ router.delete('/algorithms/:id', async (req, res) => {
   }
 });
 
+// Update Algorithm
+router.put('/algorithms/:id', async (req, res) => {
+  try {
+    const { name, category, description, complexity, code } = req.body;
+    // Extracting code string fields if they exist
+    const code_cpp = code?.cpp || '';
+    const code_java = code?.java || '';
+    const code_python = code?.python || '';
+
+    const result = await pool.query(
+      `UPDATE algorithms SET 
+        name = $1, 
+        category = $2, 
+        description = $3, 
+        complexity = $4,
+        code_cpp = $5,
+        code_java = $6,
+        code_python = $7
+       WHERE id = $8 RETURNING *`,
+      [name, category, description, complexity, code_cpp, code_java, code_python, req.params.id]
+    );
+
+    if (result.rows.length === 0) {
+      return res.status(404).json({ error: 'Algorithm not found' });
+    }
+
+    res.status(200).json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
 export default router;

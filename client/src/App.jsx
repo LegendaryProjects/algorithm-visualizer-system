@@ -6,6 +6,7 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ProgressDashboard from './pages/ProgressDashboard';
+import EditAlgorithm from './pages/EditAlgorithm';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -39,10 +40,26 @@ export default function App() {
             }
           />
           <Route
+            path="/progress/:userId"
+            element={
+              <ProtectedRoute>
+                <ProgressDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
             path="/admin"
             element={
               <ProtectedRoute>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/edit-algorithm/:id"
+            element={
+              <ProtectedRoute>
+                <EditAlgorithm />
               </ProtectedRoute>
             }
           />

@@ -1,7 +1,9 @@
 import { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
 import { Bookmark, CheckCircle2, Layers, Zap, Pin, X } from 'lucide-react';
+import TopNav from '../components/TopNav';
 
 // Formats the PostgreSQL timestamp beautifully
 function formatDate(iso) {
@@ -13,18 +15,21 @@ export default function ProgressDashboard() {
   const [bookmarks, setBookmarks] = useState([]);
   const [history, setHistory] = useState([]);
   const { user } = useAuth();
-  const userId = user?.id;
+  const { userId: routeUserId } = useParams();
+  
+  // If a routeUserId is provided (e.g. admin viewing someone else), use it. Otherwise use current user.
+  const targetUserId = routeUserId || user?.id;
 
   useEffect(() => {
-    if (userId) {
+    if (targetUserId) {
       fetchBookmarks();
       fetchHistory();
     }
-  }, [userId]);
+  }, [targetUserId]);
 
   const fetchBookmarks = async () => {
     try {
-      const res = await api.get(`/progress/bookmarks/${userId}`);
+      const res = await api.get(`/progress/bookmarks/${targetUserId}`);
       setBookmarks(res.data);
     } catch (err) {
       console.error("Failed to fetch bookmarks", err);
@@ -33,7 +38,7 @@ export default function ProgressDashboard() {
 
   const fetchHistory = async () => {
     try {
-      const res = await api.get(`/progress/${userId}`);
+      const res = await api.get(`/progress/${targetUserId}`);
       setHistory(res.data);
     } catch (err) {
       console.error("Failed to fetch history", err);
@@ -43,7 +48,7 @@ export default function ProgressDashboard() {
   const removeBookmark = async (algo_id) => {
     if (!window.confirm('Remove this bookmark?')) return;
     try {
-      await api.post('/progress/bookmarks/toggle', { user_id: userId, algo_id });
+      await api.post('/progress/bookmarks/toggle', { user_id: targetUserId, algo_id });
       setBookmarks((prev) => prev.filter((b) => b.algo_id !== algo_id));
     } catch (err) {
       alert("Database error while removing bookmark.");
@@ -61,11 +66,13 @@ export default function ProgressDashboard() {
   ];
 
   return (
-    <div className="glass relative min-h-screen w-full overflow-hidden flex justify-center px-5 py-14 sm:py-20"
-      style={{
-        background: 'linear-gradient(160deg, #1a1030 0%, #12142b 45%, #0b1224 100%)',
-      }}
-    >
+    <div className="min-h-screen flex flex-col bg-[#0b0f19]">
+      <TopNav />
+      <div className="glass relative flex-1 w-full overflow-hidden flex justify-center px-5 py-14 sm:py-20"
+        style={{
+          background: 'linear-gradient(160deg, #1a1030 0%, #12142b 45%, #0b1224 100%)',
+        }}
+      >
       <style>{`
         @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Inter:wght@400;500;600&display=swap');
         .glass * { font-family: 'Inter', sans-serif; }
@@ -243,6 +250,7 @@ export default function ProgressDashboard() {
             )}
           </div>
         </div>
+      </div>
       </div>
     </div>
   );

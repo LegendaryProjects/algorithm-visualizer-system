@@ -1,0 +1,44 @@
+import React from 'react';
+import { useNavigate, Link } from 'react-router-dom';
+import { useAuth } from '../context/AuthContext';
+
+export default function TopNav() {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
+
+  return (
+    <header className="h-16 border-b border-[#27272a] px-8 flex items-center justify-between bg-[#141416] shrink-0">
+      <div className="flex items-center space-x-3">
+        <span className="text-sm font-semibold tracking-wide text-white">Algorithm Visualizer System</span>
+      </div>
+      
+      <div className="flex items-center space-x-6">
+        <Link to="/" className="text-sm font-medium text-white hover:text-blue-400 transition">Visualizer</Link>
+        {user?.role !== 'admin' && (
+          <Link to="/progress" className="text-sm font-medium text-white hover:text-blue-400 transition">Progress</Link>
+        )}
+        {user?.role === 'admin' && (
+          <Link to="/admin" className="text-sm font-medium text-white hover:text-red-400 transition">Admin Panel</Link>
+        )}
+      </div>
+      
+      <div className="flex items-center space-x-4">
+        <div className="text-right">
+          <p className="text-xs font-medium text-neutral-200">{user?.username}</p>
+          <p className="text-[11px] text-neutral-400 capitalize">{user?.role}</p>
+        </div>
+        <button
+          onClick={handleLogout}
+          className="text-xs bg-[#222226] hover:bg-[#2b2b30] text-neutral-200 px-3.5 py-2 rounded transition cursor-pointer border border-[#303036]"
+        >
+          Sign Out
+        </button>
+      </div>
+    </header>
+  );
+}
