@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import axios from 'axios';
+import api from '../services/api';
+import { useAuth } from '../context/AuthContext';
 import { Bookmark, CheckCircle2, Layers, Zap, Pin, X } from 'lucide-react';
 
 // Formats the PostgreSQL timestamp beautifully
@@ -11,38 +12,38 @@ function formatDate(iso) {
 export default function ProgressDashboard() {
   const [bookmarks, setBookmarks] = useState([]);
   const [history, setHistory] = useState([]);
-  const userId = 1;
+  const { user } = useAuth();
+  const userId = user?.id;
 
   useEffect(() => {
-    fetchBookmarks();
-    fetchHistory();
-  }, []);
+    if (userId) {
+      fetchBookmarks();
+      fetchHistory();
+    }
+  }, [userId]);
 
   const fetchBookmarks = async () => {
     try {
-      // PERFECTLY WIRED TO OUR EXPRESS BACKEND
-      const res = await axios.get(`http://localhost:3001/api/progress/bookmarks/${userId}`);
+      const res = await api.get(`/progress/bookmarks/${userId}`);
       setBookmarks(res.data);
     } catch (err) {
-      console.error("Make sure your backend is running!", err);
+      console.error("Failed to fetch bookmarks", err);
     }
   };
 
   const fetchHistory = async () => {
     try {
-      // PERFECTLY WIRED TO OUR EXPRESS BACKEND
-      const res = await axios.get(`http://localhost:3001/api/progress/${userId}`);
+      const res = await api.get(`/progress/${userId}`);
       setHistory(res.data);
     } catch (err) {
-      console.error("Make sure your backend is running!", err);
+      console.error("Failed to fetch history", err);
     }
   };
 
   const removeBookmark = async (algo_id) => {
     if (!window.confirm('Remove this bookmark?')) return;
     try {
-      // PERFECTLY WIRED TO OUR EXPRESS BACKEND
-      await axios.post('http://localhost:3001/api/progress/bookmarks/toggle', { user_id: userId, algo_id });
+      await api.post('/progress/bookmarks/toggle', { user_id: userId, algo_id });
       setBookmarks((prev) => prev.filter((b) => b.algo_id !== algo_id));
     } catch (err) {
       alert("Database error while removing bookmark.");

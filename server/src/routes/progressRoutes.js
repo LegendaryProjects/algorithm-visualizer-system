@@ -1,15 +1,14 @@
-const express = require("express");
+import express from 'express';
+import pool from '../config/db.js';
+
 const router = express.Router();
-const { Pool } = require("pg");
 
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
-
-// 1. Get Progress History (Used by your Progress Dashboard)
-router.get("/:userId", async (req, res) => {
+// 1. Get Progress History
+router.get('/:userId', async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT p.*, a.name as algo_name FROM user_progress p 
-       JOIN algorithms a ON p.algo_id = a.algo_id WHERE p.user_id = $1 ORDER BY p.last_visited DESC`,
+       JOIN algorithms a ON p.algo_id = a.id WHERE p.user_id = $1 ORDER BY p.last_visited DESC`,
       [req.params.userId]
     );
     res.json(result.rows);
@@ -18,8 +17,8 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-// 2. Update Progress (Triggered by the Visualizer when a user watches a simulation)
-router.post("/update", async (req, res) => {
+// 2. Update Progress
+router.post('/update', async (req, res) => {
   try {
     const { user_id, algo_id, completion_pct, steps_viewed } = req.body;
     const result = await pool.query(
@@ -37,12 +36,12 @@ router.post("/update", async (req, res) => {
   }
 });
 
-// 3. Get Bookmarks (Used by Progress Dashboard)
-router.get("/bookmarks/:userId", async (req, res) => {
+// 3. Get Bookmarks
+router.get('/bookmarks/:userId', async (req, res) => {
   try {
     const result = await pool.query(
       `SELECT b.*, a.name as algo_name FROM bookmarks b 
-       JOIN algorithms a ON b.algo_id = a.algo_id WHERE b.user_id = $1`,
+       JOIN algorithms a ON b.algo_id = a.id WHERE b.user_id = $1`,
       [req.params.userId]
     );
     res.json(result.rows);
@@ -51,31 +50,31 @@ router.get("/bookmarks/:userId", async (req, res) => {
   }
 });
 
-// 4. Toggle Bookmark (Visualizer & Progress Dashboard)
-router.post("/bookmarks/toggle", async (req, res) => {
+// 4. Toggle Bookmark
+router.post('/bookmarks/toggle', async (req, res) => {
   try {
     const { user_id, algo_id, bookmark_notes } = req.body;
     const existing = await pool.query(
-      "SELECT * FROM bookmarks WHERE user_id = $1 AND algo_id = $2",
+      'SELECT * FROM bookmarks WHERE user_id = $1 AND algo_id = $2',
       [user_id, algo_id]
     );
 
     if (existing.rows.length > 0) {
       await pool.query(
-        "DELETE FROM bookmarks WHERE user_id = $1 AND algo_id = $2",
+        'DELETE FROM bookmarks WHERE user_id = $1 AND algo_id = $2',
         [user_id, algo_id]
       );
-      res.json({ status: "removed" });
+      res.json({ status: 'removed' });
     } else {
       await pool.query(
         `INSERT INTO bookmarks (user_id, algo_id, bookmark_notes) VALUES ($1, $2, $3)`,
-        [user_id, algo_id, bookmark_notes || ""]
+        [user_id, algo_id, bookmark_notes || '']
       );
-      res.json({ status: "added" });
+      res.json({ status: 'added' });
     }
   } catch (error) {
     res.status(500).json({ error: error.message });
   }
 });
 
-module.exports = router;
+export default router;

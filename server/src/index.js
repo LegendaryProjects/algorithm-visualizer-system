@@ -16,6 +16,12 @@ app.use(express.json({ extended: false }));
 app.use('/api/auth', authRoutes);
 app.use('/api/algorithms', algorithmRoutes);
 
+import progressRoutes from './routes/progressRoutes.js';
+import adminRoutes from './routes/adminRoutes.js';
+
+app.use('/api/progress', progressRoutes);
+app.use('/api/admin', adminRoutes);
+
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });
 });

@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import Layout from '../components/Layout';
 
@@ -18,6 +18,14 @@ export default function Dashboard() {
         <div className="flex items-center space-x-3">
           <span className="text-sm font-semibold tracking-wide">Algorithm Visualizer System</span>
         </div>
+        <div className="flex items-center space-x-6">
+          <Link to="/" className="text-sm font-medium text-white hover:text-blue-400 transition">Visualizer</Link>
+          <Link to="/progress" className="text-sm font-medium text-white hover:text-blue-400 transition">Progress</Link>
+          {user?.role === 'admin' && (
+            <Link to="/admin" className="text-sm font-medium text-white hover:text-red-400 transition">Admin Panel</Link>
+          )}
+        </div>
+        
         <div className="flex items-center space-x-4">
           <div className="text-right">
             <p className="text-xs font-medium text-neutral-200">{user?.username}</p>
