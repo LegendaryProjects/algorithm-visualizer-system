@@ -3,6 +3,7 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import pool from './config/db.js';
 import authRoutes from './routes/authRoutes.js';
+import algorithmRoutes from './routes/algorithms.js';
 
 dotenv.config();
 
@@ -10,9 +11,10 @@ const app = express();
 const PORT = process.env.PORT || 5000;
 
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173', credentials: true }));
-app.use(express.json());
+app.use(express.json({ extended: false }));
 
 app.use('/api/auth', authRoutes);
+app.use('/api/algorithms', algorithmRoutes);
 
 app.get('/health', (req, res) => {
   res.status(200).json({ status: 'healthy', timestamp: new Date().toISOString() });

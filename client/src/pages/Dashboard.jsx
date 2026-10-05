@@ -1,6 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
+import Layout from '../components/Layout';
 
 export default function Dashboard() {
   const { user, session, logout } = useAuth();
@@ -31,38 +32,8 @@ export default function Dashboard() {
         </div>
       </header>
 
-      <main className="flex-1 p-8 max-w-4xl mx-auto w-full">
-        <div className="border border-[#27272a] bg-[#141416] rounded-lg p-6 mb-6">
-          <h2 className="text-base font-semibold text-white mb-4">
-            Account & Session Details
-          </h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-xs font-mono">
-            <div className="bg-[#1a1a1e] p-3.5 rounded border border-[#2a2a30]">
-              <span className="text-neutral-400 block mb-1">User ID:</span>
-              <span className="text-neutral-200 break-all">{user?.id}</span>
-            </div>
-            <div className="bg-[#1a1a1e] p-3.5 rounded border border-[#2a2a30]">
-              <span className="text-neutral-400 block mb-1">Email:</span>
-              <span className="text-neutral-200">{user?.email}</span>
-            </div>
-            <div className="bg-[#1a1a1e] p-3.5 rounded border border-[#2a2a30]">
-              <span className="text-neutral-400 block mb-1">Active Session ID:</span>
-              <span className="text-neutral-200 break-all">{session?.id || 'Active'}</span>
-            </div>
-            <div className="bg-[#1a1a1e] p-3.5 rounded border border-[#2a2a30]">
-              <span className="text-neutral-400 block mb-1">Session Expires:</span>
-              <span className="text-neutral-200">
-                {session?.expiresAt ? new Date(session.expiresAt).toLocaleString() : 'In 24 hours'}
-              </span>
-            </div>
-          </div>
-        </div>
-
-        <div className="border border-dashed border-[#27272a] rounded-lg p-12 text-center">
-          <p className="text-sm text-neutral-400">
-            You are logged in. The algorithm catalog will be displayed here.
-          </p>
-        </div>
+      <main className="flex-1 w-full h-full overflow-hidden relative p-0">
+        <Layout />
       </main>
     </div>
   );
