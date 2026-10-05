@@ -13,7 +13,7 @@ import api from '../../services/api';
 const Layout = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { user } = useAuth();
-  const [isBookmarked, setIsBookmarked] = useState(false);
+  const [bookmarkedAlgoIds, setBookmarkedAlgoIds] = useState([]);
   const [maxStepReached, setMaxStepReached] = useState(0);
 
   const {
@@ -48,8 +48,8 @@ const Layout = () => {
     if (!user) return;
     api.get(`/progress/bookmarks/${user.id}`)
       .then(res => {
-        const pinned = res.data.some(b => b.algo_id === selectedAlgoId);
-        setIsBookmarked(pinned);
+        const pinnedIds = res.data.map(b => b.algo_id);
+        setBookmarkedAlgoIds(pinnedIds);
       })
       .catch(console.error);
     
@@ -86,11 +86,17 @@ const Layout = () => {
     if (!user) return;
     try {
       const res = await api.post('/progress/bookmarks/toggle', { user_id: user.id, algo_id: selectedAlgoId });
-      setIsBookmarked(res.data.status === 'added');
+      if (res.data.status === 'added') {
+        setBookmarkedAlgoIds(prev => [...prev, selectedAlgoId]);
+      } else {
+        setBookmarkedAlgoIds(prev => prev.filter(id => id !== selectedAlgoId));
+      }
     } catch (err) {
       console.error(err);
     }
   };
+
+  const isBookmarked = bookmarkedAlgoIds.includes(selectedAlgoId);
 
   const handleInputChange = (inputName, val, type) => {
     let parsedVal = val;
@@ -122,7 +128,7 @@ const Layout = () => {
           >
             {displayAlgorithms.map(algo => (
               <option key={algo.id} value={algo.id}>
-                {algo.name} ({algo.category})
+                {bookmarkedAlgoIds.includes(algo.id) ? '📌 ' : ''}{algo.name} ({algo.category})
               </option>
             ))}
           </select>

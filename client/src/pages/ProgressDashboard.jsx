@@ -79,7 +79,7 @@ export default function ProgressDashboard() {
   return (
     <div className="min-h-screen flex flex-col bg-[#0b0f19]">
       <TopNav />
-      <div className="glass relative flex-1 w-full overflow-hidden flex justify-center px-5 py-14 sm:py-20"
+      <div className="glass relative flex-1 w-full overflow-y-auto overflow-x-hidden flex justify-center px-5 py-14 sm:py-20"
         style={{
           background: 'linear-gradient(160deg, #1a1030 0%, #12142b 45%, #0b1224 100%)',
         }}
