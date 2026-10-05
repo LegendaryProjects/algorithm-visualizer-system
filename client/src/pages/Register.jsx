@@ -4,7 +4,6 @@ import { useAuth } from '../context/AuthContext';
 import AuthLayout from '../components/Layout/AuthLayout';
 
 export default function Register() {
-  const [role, setRole] = useState('learner');
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -18,7 +17,7 @@ export default function Register() {
     setError('');
     setIsSubmitting(true);
     try {
-      await register(username, email, password, role);
+      await register(username, email, password, 'learner');
       navigate('/');
     } catch (err) {
       setError(err.response?.data?.error || 'Registration failed');
@@ -32,38 +31,6 @@ export default function Register() {
       <div className="mb-6">
         <h2 className="text-2xl font-bold text-white tracking-tight">Create Account</h2>
         <p className="text-xs text-neutral-400 mt-1">Register a new profile to track your progress</p>
-      </div>
-
-      {/* Role Switch Tab */}
-      <div className="flex bg-[#15171c] p-1 rounded border border-[#262930] mb-6">
-        <button
-          type="button"
-          onClick={() => {
-            setRole('learner');
-            setError('');
-          }}
-          className={`flex-1 py-2 text-xs font-medium rounded transition-all cursor-pointer ${
-            role === 'learner'
-              ? 'bg-[#e50914] text-white shadow-sm'
-              : 'text-neutral-400 hover:text-neutral-200'
-          }`}
-        >
-          Learner
-        </button>
-        <button
-          type="button"
-          onClick={() => {
-            setRole('admin');
-            setError('');
-          }}
-          className={`flex-1 py-2 text-xs font-medium rounded transition-all cursor-pointer ${
-            role === 'admin'
-              ? 'bg-[#e50914] text-white shadow-sm'
-              : 'text-neutral-400 hover:text-neutral-200'
-          }`}
-        >
-          Admin
-        </button>
       </div>
 
       {error && (

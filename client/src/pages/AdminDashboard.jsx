@@ -105,16 +105,23 @@ export default function AdminDashboard() {
                       </span>
                     </td>
                     <td className="p-4 flex gap-3">
-                      <button 
-                        onClick={() => navigate(`/progress/${u.id}`)} 
-                        className="text-blue-400 hover:text-blue-300 p-1 flex items-center gap-1 text-xs"
-                        title="View Progress"
-                      >
-                        <Eye size={16} /> Progress
-                      </button>
-                      <button onClick={() => deleteUser(u.id)} className="text-red-400 hover:text-red-300 p-1" title="Delete User">
-                        <Trash2 size={16} />
-                      </button>
+                      {u.id !== user.id && (
+                        <>
+                          <button 
+                            onClick={() => navigate(`/progress/${u.id}`)} 
+                            className="text-blue-400 hover:text-blue-300 p-1 flex items-center gap-1 text-xs"
+                            title="View Progress"
+                          >
+                            <Eye size={16} /> Progress
+                          </button>
+                          <button onClick={() => deleteUser(u.id)} className="text-red-400 hover:text-red-300 p-1" title="Delete User">
+                            <Trash2 size={16} />
+                          </button>
+                        </>
+                      )}
+                      {u.id === user.id && (
+                        <span className="text-xs text-gray-500 italic flex items-center h-full pt-1">Current User</span>
+                      )}
                     </td>
                   </tr>
                 ))}
