@@ -9,6 +9,9 @@ node_modules/
 */.env
 .env.*
 
+.pem
+algoviz_key.pem
+
 # Build outputs
 dist/
 build/
