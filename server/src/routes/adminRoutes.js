@@ -77,3 +77,48 @@ router.put('/algorithms/:id', async (req, res) => {
 });
 
 export default router;
+
+// Get login history
+router.get('/login-history', async (req, res) => {
+  try {
+    const result = await pool.query(`
+      SELECT s.id, s.device_info, s.ip_address, s.created_at, u.username, u.email
+      FROM user_sessions s
+      JOIN users u ON s.user_id = u.id
+      ORDER BY s.created_at DESC
+      LIMIT 100
+    `);
+    res.json(result.rows);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});
+
+// Add New Algorithm
+router.post('/algorithms', async (req, res) => {
+  try {
+    const { id, name, category, description, complexity, code } = req.body;
+    
+    // Extracting code string fields if they exist
+    const code_cpp = code?.cpp || '';
+    const code_java = code?.java || '';
+    const code_python = code?.python || '';
+
+    // Check if ID already exists
+    const checkResult = await pool.query('SELECT id FROM algorithms WHERE id = $1', [id]);
+    if (checkResult.rows.length > 0) {
+      return res.status(400).json({ error: 'Algorithm ID already exists. Use a unique ID like "quick-sort".' });
+    }
+
+    const result = await pool.query(
+      `INSERT INTO algorithms (id, name, category, description, complexity, code_cpp, code_java, code_python)
+       VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+       RETURNING *`,
+      [id, name, category, description, complexity, code_cpp, code_java, code_python]
+    );
+
+    res.status(201).json(result.rows[0]);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+});

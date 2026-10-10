@@ -134,7 +134,7 @@ export default function ProgressDashboard() {
 
       <div className="relative w-full max-w-4xl">
         {/* Header */}
-        <div className="pane rounded-3xl px-7 py-8 sm:px-9 sm:py-9 mb-6">
+        <div className="pane rounded-3xl animate-slide-up stagger-1 px-7 py-8 sm:px-9 sm:py-9 mb-6">
           <p className="text-xs tracking-wide mb-3" style={{ color: 'rgba(255,255,255,0.55)' }}>
             Learning dashboard · {targetUserInfo?.username || 'Loading...'}
           </p>
@@ -151,7 +151,7 @@ export default function ProgressDashboard() {
           {stats.map((s) => {
             const Icon = s.icon;
             return (
-              <div key={s.label} className="stat-card rounded-2xl p-5 flex flex-col gap-4">
+              <div key={s.label} className="stat-card rounded-2xl animate-pop-in stagger-2 p-5 flex flex-col gap-4">
                 <div
                   className="w-9 h-9 rounded-xl flex items-center justify-center"
                   style={{ background: `${s.glow}22`, border: `1px solid ${s.glow}55` }}
@@ -169,7 +169,7 @@ export default function ProgressDashboard() {
 
         <div className="grid lg:grid-cols-5 gap-6">
           {/* Session history */}
-          <div className="pane rounded-3xl p-6 sm:p-7 lg:col-span-3">
+          <div className="pane rounded-3xl animate-slide-up stagger-1 p-6 sm:p-7 lg:col-span-3">
             <div className="flex items-baseline justify-between mb-4">
               <h2 className="display text-lg font-semibold text-white">Session history</h2>
               <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{history.length} entries</span>
@@ -218,7 +218,7 @@ export default function ProgressDashboard() {
           </div>
 
           {/* Pinned algorithms */}
-          <div className="pane rounded-3xl p-6 sm:p-7 lg:col-span-2">
+          <div className="pane rounded-3xl animate-slide-up stagger-1 p-6 sm:p-7 lg:col-span-2">
             <div className="flex items-baseline justify-between mb-4">
               <h2 className="display text-lg font-semibold text-white">Pinned</h2>
               <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{bookmarks.length}</span>

@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import AdminDashboard from './pages/AdminDashboard';
 import ProgressDashboard from './pages/ProgressDashboard';
 import EditAlgorithm from './pages/EditAlgorithm';
+import AddAlgorithm from './pages/AddAlgorithm';
 
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
@@ -52,6 +53,14 @@ export default function App() {
             element={
               <ProtectedRoute>
                 <AdminDashboard />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/admin/add-algorithm"
+            element={
+              <ProtectedRoute>
+                <AddAlgorithm />
               </ProtectedRoute>
             }
           />

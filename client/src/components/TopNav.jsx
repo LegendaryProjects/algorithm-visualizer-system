@@ -12,7 +12,7 @@ export default function TopNav() {
   };
 
   return (
-    <header className="h-16 border-b border-[#27272a] px-8 flex items-center justify-between bg-[#141416] shrink-0">
+    <header className="h-16 border-b border-[#27272a] px-8 flex items-center justify-between bg-[#141416] shrink-0 animate-fade-in">
       <div className="flex items-center space-x-3">
         <span className="text-sm font-semibold tracking-wide text-white">Algorithm Visualizer System</span>
       </div>

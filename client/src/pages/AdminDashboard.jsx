@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
-import { Users, Code, Trash2, Edit, Eye } from 'lucide-react';
+import { Users, Code, Trash2, Edit, Eye, Activity } from 'lucide-react';
 import TopNav from '../components/TopNav';
 
 export default function AdminDashboard() {
   const [users, setUsers] = useState([]);
   const [algorithms, setAlgorithms] = useState([]);
+  const [loginHistory, setLoginHistory] = useState([]);
   const [activeTab, setActiveTab] = useState('users');
   const { user } = useAuth();
   const navigate = useNavigate();
@@ -15,6 +16,7 @@ export default function AdminDashboard() {
   useEffect(() => {
     fetchUsers();
     fetchAlgorithms();
+    fetchLoginHistory();
   }, []);
 
   const fetchUsers = async () => {
@@ -32,6 +34,15 @@ export default function AdminDashboard() {
       setAlgorithms(res.data);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const fetchLoginHistory = async () => {
+    try {
+      const res = await api.get('/admin/login-history');
+      setLoginHistory(res.data);
+    } catch (err) {
+      console.error('Failed to fetch login history:', err);
     }
   };
 
@@ -63,26 +74,32 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-[#0b0f19] text-white flex flex-col">
       <TopNav />
       
-      <div className="p-8 flex-1">
+      <div className="p-8 flex-1 max-w-7xl mx-auto w-full">
         <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
         
-        <div className="flex gap-4 mb-8 border-b border-gray-800 pb-2">
+        <div className="flex gap-4 mb-8 border-b border-gray-800 pb-2 overflow-x-auto">
           <button 
             onClick={() => setActiveTab('users')}
-            className={`flex items-center gap-2 px-4 py-2 ${activeTab === 'users' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white'}`}
+            className={`flex items-center gap-2 px-4 py-2 shrink-0 ${activeTab === 'users' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white'}`}
           >
             <Users size={20} /> Users
           </button>
           <button 
             onClick={() => setActiveTab('algorithms')}
-            className={`flex items-center gap-2 px-4 py-2 ${activeTab === 'algorithms' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white'}`}
+            className={`flex items-center gap-2 px-4 py-2 shrink-0 ${activeTab === 'algorithms' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white'}`}
           >
             <Code size={20} /> Algorithms
+          </button>
+          <button 
+            onClick={() => setActiveTab('history')}
+            className={`flex items-center gap-2 px-4 py-2 shrink-0 ${activeTab === 'history' ? 'text-blue-400 border-b-2 border-blue-400' : 'text-gray-400 hover:text-white'}`}
+          >
+            <Activity size={20} /> Login History
           </button>
         </div>
 
         {activeTab === 'users' && (
-          <div className="bg-[#15171c] rounded-xl border border-gray-800 overflow-hidden">
+          <div className="bg-[#15171c] rounded-xl border border-gray-800 overflow-hidden overflow-x-auto animate-slide-up stagger-1">
             <table className="w-full text-left">
               <thead className="bg-gray-900/50">
                 <tr>
@@ -131,7 +148,7 @@ export default function AdminDashboard() {
         )}
 
         {activeTab === 'algorithms' && (
-          <div className="bg-[#15171c] rounded-xl border border-gray-800 overflow-hidden">
+          <div className="bg-[#15171c] rounded-xl border border-gray-800 overflow-hidden overflow-x-auto animate-slide-up stagger-1">
             <table className="w-full text-left">
               <thead className="bg-gray-900/50">
                 <tr>
@@ -139,7 +156,7 @@ export default function AdminDashboard() {
                   <th className="p-4 text-sm font-medium text-gray-400">Name</th>
                   <th className="p-4 text-sm font-medium text-gray-400">Category</th>
                   <th className="p-4 text-sm font-medium text-gray-400">Complexity</th>
-                  <th className="p-4 text-sm font-medium text-gray-400">Actions</th>
+                  <th className="p-4 text-sm font-medium text-gray-400 text-right"><button onClick={() => navigate('/admin/add-algorithm')} className="bg-emerald-600 hover:bg-emerald-500 text-white px-3 py-1.5 rounded-md text-xs font-semibold cursor-pointer shadow-md">+ Add Algorithm</button></th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-800">
@@ -163,6 +180,44 @@ export default function AdminDashboard() {
             </table>
           </div>
         )}
+
+        {activeTab === 'history' && (
+          <div className="bg-[#15171c] rounded-xl border border-gray-800 overflow-hidden overflow-x-auto animate-slide-up stagger-1">
+            <table className="w-full text-left">
+              <thead className="bg-gray-900/50">
+                <tr>
+                  <th className="p-4 text-sm font-medium text-gray-400">Date & Time</th>
+                  <th className="p-4 text-sm font-medium text-gray-400">User</th>
+                  <th className="p-4 text-sm font-medium text-gray-400">IP Address</th>
+                  <th className="p-4 text-sm font-medium text-gray-400">Device / Browser</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-gray-800">
+                {loginHistory.map(record => (
+                  <tr key={record.id} className="hover:bg-gray-800/30">
+                    <td className="p-4 text-sm text-gray-300">
+                      {new Date(record.created_at).toLocaleString()}
+                    </td>
+                    <td className="p-4 text-sm font-medium text-white">
+                      {record.username}
+                      <span className="block text-xs text-gray-500 font-normal">{record.email}</span>
+                    </td>
+                    <td className="p-4 text-sm font-mono text-gray-400">{record.ip_address}</td>
+                    <td className="p-4 text-sm text-gray-400">{record.device_info}</td>
+                  </tr>
+                ))}
+                {loginHistory.length === 0 && (
+                  <tr>
+                    <td colSpan="4" className="p-8 text-center text-gray-500 text-sm">
+                      No login history available.
+                    </td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        )}
+
       </div>
     </div>
   );

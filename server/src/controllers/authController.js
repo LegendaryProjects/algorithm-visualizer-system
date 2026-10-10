@@ -102,7 +102,7 @@ export const register = async (req, res) => {
     });
   } catch (error) {
     console.error('Registration error:', error);
-    res.status(500).json({ error: 'Internal server error.' });
+    res.status(500).json({ error: 'Internal server error: ' + error.message });
   }
 };
 
@@ -173,7 +173,7 @@ export const login = async (req, res) => {
     });
   } catch (error) {
     console.error('Login error:', error);
-    res.status(500).json({ error: 'Internal server error.' });
+    res.status(500).json({ error: 'Internal server error: ' + error.message });
   }
 };
 
@@ -199,7 +199,7 @@ export const getMe = async (req, res) => {
     });
   } catch (error) {
     console.error('Session retrieval error:', error);
-    res.status(500).json({ error: 'Internal server error.' });
+    res.status(500).json({ error: 'Internal server error: ' + error.message });
   }
 };
 
@@ -218,7 +218,7 @@ export const getUserSessions = async (req, res) => {
     res.json({ sessions: sessionsQuery.rows });
   } catch (error) {
     console.error('Get user sessions error:', error);
-    res.status(500).json({ error: 'Internal server error.' });
+    res.status(500).json({ error: 'Internal server error: ' + error.message });
   }
 };
 

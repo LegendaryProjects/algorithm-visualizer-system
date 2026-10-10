@@ -30,22 +30,22 @@ export default function Login() {
   return (
     <AuthLayout>
       <div className="mb-6">
-        <h2 className="text-2xl font-bold text-white tracking-tight">Sign In</h2>
-        <p className="text-xs text-neutral-400 mt-1">Enter your credentials to access the workspace</p>
+        <h2 className="display text-2xl font-bold text-white tracking-tight">Sign In</h2>
+        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Enter your credentials to access the workspace</p>
       </div>
 
       {/* Role Switch Tab */}
-      <div className="flex bg-[#15171c] p-1 rounded border border-[#262930] mb-6">
+      <div className="flex bg-white/5 p-1 rounded-lg border border-white/10 mb-6 backdrop-blur-md">
         <button
           type="button"
           onClick={() => {
             setRole('learner');
             setError('');
           }}
-          className={`flex-1 py-2 text-xs font-medium rounded transition-all cursor-pointer ${
+          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all cursor-pointer ${
             role === 'learner'
-              ? 'bg-[#e50914] text-white shadow-sm'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-purple-600/80 text-white shadow-sm'
+              : 'text-white/50 hover:text-white/80 hover:bg-white/5'
           }`}
         >
           Learner
@@ -56,10 +56,10 @@ export default function Login() {
             setRole('admin');
             setError('');
           }}
-          className={`flex-1 py-2 text-xs font-medium rounded transition-all cursor-pointer ${
+          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all cursor-pointer ${
             role === 'admin'
-              ? 'bg-[#e50914] text-white shadow-sm'
-              : 'text-neutral-400 hover:text-neutral-200'
+              ? 'bg-purple-600/80 text-white shadow-sm'
+              : 'text-white/50 hover:text-white/80 hover:bg-white/5'
           }`}
         >
           Admin
@@ -87,7 +87,7 @@ export default function Login() {
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-medium text-neutral-300 mb-1.5">
+          <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Username or Email
           </label>
           <input
@@ -96,12 +96,12 @@ export default function Login() {
             placeholder="Enter username or email"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
-            className="w-full bg-[#15171c] border border-[#262930] text-white text-sm px-3.5 py-2.5 rounded focus:outline-none focus:border-neutral-400 transition-colors placeholder:text-neutral-600"
+            className="w-full bg-white/5 border border-white/10 text-white text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-400 transition-colors placeholder:text-white/30"
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium text-neutral-300 mb-1.5">
+          <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
             Password
           </label>
           <input
@@ -110,22 +110,22 @@ export default function Login() {
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-[#15171c] border border-[#262930] text-white text-sm px-3.5 py-2.5 rounded focus:outline-none focus:border-neutral-400 transition-colors placeholder:text-neutral-600"
+            className="w-full bg-white/5 border border-white/10 text-white text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-400 transition-colors placeholder:text-white/30"
           />
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-[#e50914] hover:bg-[#c10712] text-white font-medium text-sm py-2.5 rounded transition-colors disabled:opacity-50 mt-2 cursor-pointer"
+          className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-medium text-sm py-2.5 rounded-lg transition-all disabled:opacity-50 mt-4 cursor-pointer shadow-lg shadow-purple-900/20"
         >
           {isSubmitting ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
 
-      <div className="mt-8 text-center text-xs text-neutral-400">
+      <div className="mt-8 text-center text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
         Don't have an account?{' '}
-        <Link to="/register" className="text-white hover:underline underline-offset-4">
+        <Link to="/register" className="text-white hover:text-purple-300 transition-colors hover:underline underline-offset-4">
           Sign Up
         </Link>
       </div>

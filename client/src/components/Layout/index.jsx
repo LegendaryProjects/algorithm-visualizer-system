@@ -119,7 +119,7 @@ const Layout = () => {
       <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/60 blur-[100px] rounded-full pointer-events-none"></div>
 
       {/* Navbar & Algorithm Selector */}
-      <nav className="flex justify-between items-center mb-6 z-10 bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-xl shadow-xl">
+      <nav className="flex justify-between items-center mb-6 z-10 bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-xl shadow-xl animate-fade-in">
         <div className="flex-1 flex justify-start pl-2">
           <select 
             className="p-2 border border-white/30 rounded-md bg-[#1e293b] text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 min-w-[250px] outline-none cursor-pointer"
@@ -235,7 +235,7 @@ const Layout = () => {
         </div>
 
         {/* Middle Column: Canvas & Explanation */}
-        <div className="flex flex-col flex-[4] gap-4 h-full min-h-0 min-w-0">
+        <div className="flex flex-col flex-[4] gap-4 h-full min-h-0 min-w-0 animate-slide-up stagger-2">
           <div className="flex-[2.5] min-h-0">
             <Canvas state={currentStep?.state} algoId={selectedAlgoId} />
           </div>
@@ -249,7 +249,7 @@ const Layout = () => {
         </div>
 
         {/* Right Column: Code & State */}
-        <div className="flex flex-col flex-[2.8] gap-4 h-full min-h-0 min-w-0 overflow-x-hidden">
+        <div className="flex flex-col flex-[2.8] gap-4 h-full min-h-0 min-w-0 overflow-x-hidden animate-slide-up stagger-3">
           <div className="flex-[3] min-h-0">
             <CodePanel 
               codeSamples={algorithmData?.code}
