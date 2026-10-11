@@ -8,12 +8,14 @@ const isLocalhost = !process.env.DB_HOST || process.env.DB_HOST === 'localhost' 
 let poolConfig = {};
 
 if (process.env.DATABASE_URL) {
-  // If the user provided a full Neon/Postgres connection string, use it directly!
+  // Clean DATABASE_URL: remove channel_binding=require which breaks Node pg SCRAM auth
+  const cleanUrl = process.env.DATABASE_URL
+    .replace(/[?&]channel_binding=require/, '')
+    .replace(/&sslmode=/, '?sslmode=');
+
   poolConfig = {
-    connectionString: process.env.DATABASE_URL,
-    ssl: process.env.DATABASE_URL.includes('sslmode=require') || !isLocalhost 
-         ? { rejectUnauthorized: false } 
-         : false
+    connectionString: cleanUrl,
+    ssl: { rejectUnauthorized: false }
   };
 } else {
   // Fallback to individual variables for local dev

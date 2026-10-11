@@ -11,7 +11,11 @@ const app = express();
 app.use((req, res, next) => { console.log("=>", req.method, req.url); next(); });
 const PORT = process.env.PORT || 5000;
 
-app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173', credentials: true }));
+const clientOrigin = process.env.CLIENT_ORIGIN;
+app.use(cors({ 
+  origin: clientOrigin ? clientOrigin.split(',') : true, 
+  credentials: true 
+}));
 app.use(express.json({ extended: false }));
 
 app.use('/api/auth', authRoutes);

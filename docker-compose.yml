@@ -1,5 +1,3 @@
-version: '3.8'
-
 services:
   server:
     build: ./server
@@ -14,11 +12,9 @@ services:
     build:
       context: ./client
       args:
-        # Default for local testing. In Azure, you'll configure this to point to the server's public URL
-        - VITE_API_BASE_URL=http://localhost:5555/api
+        - VITE_API_BASE_URL=/api
     container_name: algoviz-client
     ports:
       - "80:80"
-      # We map local 5173 to 80 so it feels familiar, but inside the container Nginx uses 80
       - "5173:80"
     restart: unless-stopped

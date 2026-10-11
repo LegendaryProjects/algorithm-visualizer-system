@@ -6,7 +6,7 @@ RUN npm install
 COPY . .
 # Set the API URL at build time. 
 # You can override this in Azure by passing --build-arg VITE_API_BASE_URL=https://your-backend-url.azurewebsites.net/api
-ARG VITE_API_BASE_URL=http://localhost:5555/api
+ARG VITE_API_BASE_URL=/api
 ENV VITE_API_BASE_URL=$VITE_API_BASE_URL
 RUN npm run build
 
