@@ -225,7 +225,7 @@ const Layout = () => {
               </div>
             ) : (
               <div className="w-full">
-                <label className={`block text-xs font-medium mb-1 ${isLight ? 'text-slate-500' : 'text-gray-400'}`}>{input?.label || 'Array'}</label>
+                <label className={`block text-xs font-medium mb-1 ${isLight ? 'text-slate-500' : 'text-gray-400'}`}>Array</label>
                 <input 
                   type="text"
                   className={`p-2 rounded-lg w-full text-center text-sm border focus:outline-none transition-colors ${

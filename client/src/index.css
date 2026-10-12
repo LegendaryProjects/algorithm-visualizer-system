@@ -2,8 +2,8 @@
 
 @layer base {
   body {
-    background-color: #0c0d0e;
-    color: #f3f4f6;
+    background-color: #f8fafc;
+    color: #0f172a;
     font-family: 'Inter', sans-serif;
     -webkit-font-smoothing: antialiased;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -39,9 +39,22 @@
 }
 
 /* ==========================================================================
-   LIGHT THEME OVERRIDES (Mainly White & Clean Slate Aesthetic)
+   DARK THEME OVERRIDES
    ========================================================================== */
-html.light body {
+html.dark body {
+  background-color: #0c0d0e;
+  color: #f3f4f6;
+}
+
+html.dark #root {
+  border-inline-color: #27272a;
+}
+
+/* ==========================================================================
+   LIGHT THEME OVERRIDES (Mainly White & Clean Slate Aesthetic - DEFAULT)
+   ========================================================================== */
+html.light body,
+body:not(.dark-theme) {
   background-color: #f8fafc;
   color: #0f172a;
 }
@@ -96,8 +109,7 @@ html.light .text-gray-400 {
   color: #475569 !important;
 }
 
-html.light .text-gray-200,
-html.light .text-white {
+html.light .text-gray-200 {
   color: #0f172a !important;
 }
 
@@ -109,7 +121,7 @@ html.light .text-neutral-200 {
   color: #1e293b !important;
 }
 
-/* Form Inputs, Selects & Buttons in Light Mode */
+/* Form Inputs & Selects in Light Mode */
 html.light select,
 html.light input[type="text"],
 html.light input[type="password"],
@@ -163,6 +175,17 @@ html.light .bg-\[\#15171c\] textarea {
   background-color: #f8fafc !important;
   border-color: #cbd5e1 !important;
   color: #0f172a !important;
+}
+
+/* Primary Action Buttons: Always Keep White High-Contrast Text */
+button[type="submit"],
+.btn-primary,
+.bg-purple-600,
+.bg-purple-700,
+.bg-blue-600,
+.bg-emerald-600,
+.bg-red-600 {
+  color: #ffffff !important;
 }
 
 /* Animations */

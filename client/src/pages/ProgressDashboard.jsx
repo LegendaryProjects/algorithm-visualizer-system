@@ -138,14 +138,14 @@ export default function ProgressDashboard() {
 
       <div className="relative w-full max-w-4xl">
         {/* Header */}
-        <div className="pane rounded-3xl animate-slide-up stagger-1 px-7 py-8 sm:px-9 sm:py-9 mb-6">
+        <div className="pane rounded-3xl animate-slide-up stagger-1 px-7 py-8 sm:px-9 sm:py-9 mb-6 flex flex-col items-center text-center">
           <p className="text-xs tracking-wide mb-3" style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.55)' }}>
             Learning dashboard · {targetUserInfo?.username || 'Loading...'}
           </p>
           <h1 className="display gradient-text text-4xl sm:text-5xl font-semibold mb-2 leading-tight">
             {targetUserInfo?.id === user?.id ? 'Your progress, in focus' : `${targetUserInfo?.username}'s progress`}
           </h1>
-          <p className="text-[15px] max-w-md" style={{ color: isLight ? '#475569' : 'rgba(255,255,255,0.6)' }}>
+          <p className="text-[15px] max-w-xl text-center mx-auto" style={{ color: isLight ? '#475569' : 'rgba(255,255,255,0.6)' }}>
             {targetUserInfo?.id === user?.id ? "Every algorithm you've opened, finished, or set aside — gathered in one clear view." : "Every algorithm they've opened, finished, or set aside — gathered in one clear view."}
           </p>
         </div>
@@ -163,8 +163,8 @@ export default function ProgressDashboard() {
                   <Icon size={16} style={{ color: s.glow }} />
                 </div>
                 <div>
-                  <div className="display text-3xl font-semibold text-white">{s.value}</div>
-                  <div className="text-xs mt-0.5" style={{ color: 'rgba(255,255,255,0.55)' }}>{s.label}</div>
+                  <div className={`display text-3xl font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>{s.value}</div>
+                  <div className="text-xs mt-0.5" style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.55)' }}>{s.label}</div>
                 </div>
               </div>
             );
@@ -175,12 +175,12 @@ export default function ProgressDashboard() {
           {/* Session history */}
           <div className="pane rounded-3xl animate-slide-up stagger-1 p-6 sm:p-7 lg:col-span-3">
             <div className="flex items-baseline justify-between mb-4">
-              <h2 className="display text-lg font-semibold text-white">Session history</h2>
-              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{history.length} entries</span>
+              <h2 className={`display text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>Session history</h2>
+              <span className="text-xs" style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.5)' }}>{history.length} entries</span>
             </div>
 
             {history.length === 0 ? (
-              <p className="text-sm py-8 text-center" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <p className="text-sm py-8 text-center" style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.5)' }}>
                 Nothing studied yet — run a simulation in the Sandbox first!
               </p>
             ) : (
@@ -189,7 +189,7 @@ export default function ProgressDashboard() {
                   <div key={item.record_id} className="pane-row flex items-center gap-4 py-4">
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-2">
-                        <span className="text-[15px] text-white truncate">{item.algo_name}</span>
+                        <span className={`text-[15px] truncate font-medium ${isLight ? 'text-slate-800' : 'text-white'}`}>{item.algo_name}</span>
                         {item.completion_pct === 100 && (
                           <CheckCircle2 size={14} style={{ color: '#5EEAD4' }} />
                         )}
@@ -206,14 +206,14 @@ export default function ProgressDashboard() {
                             }}
                           />
                         </div>
-                        <span className="text-xs tabular-nums shrink-0" style={{ color: 'rgba(255,255,255,0.55)' }}>
+                        <span className="text-xs tabular-nums shrink-0" style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.55)' }}>
                           {item.completion_pct}%
                         </span>
                       </div>
                     </div>
                     <div className="text-right shrink-0 hidden sm:block">
-                      <div className="text-xs" style={{ color: 'rgba(255,255,255,0.6)' }}>{item.steps_viewed} steps</div>
-                      <div className="text-[11px]" style={{ color: 'rgba(255,255,255,0.4)' }}>{formatDate(item.last_visited)}</div>
+                      <div className="text-xs" style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.6)' }}>{item.steps_viewed} steps</div>
+                      <div className="text-[11px]" style={{ color: isLight ? '#94a3b8' : 'rgba(255,255,255,0.4)' }}>{formatDate(item.last_visited)}</div>
                     </div>
                   </div>
                 ))}
@@ -224,12 +224,12 @@ export default function ProgressDashboard() {
           {/* Pinned algorithms */}
           <div className="pane rounded-3xl animate-slide-up stagger-1 p-6 sm:p-7 lg:col-span-2">
             <div className="flex items-baseline justify-between mb-4">
-              <h2 className="display text-lg font-semibold text-white">Pinned</h2>
-              <span className="text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>{bookmarks.length}</span>
+              <h2 className={`display text-lg font-semibold ${isLight ? 'text-slate-900' : 'text-white'}`}>Pinned</h2>
+              <span className="text-xs" style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.5)' }}>{bookmarks.length}</span>
             </div>
 
             {bookmarks.length === 0 ? (
-              <p className="text-sm py-8 text-center" style={{ color: 'rgba(255,255,255,0.5)' }}>
+              <p className="text-sm py-8 text-center" style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.5)' }}>
                 You haven't pinned any algorithms yet.
               </p>
             ) : (
@@ -243,20 +243,20 @@ export default function ProgressDashboard() {
                       <Bookmark size={12} style={{ color: '#F9A8D4' }} fill="#F9A8D4" />
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="text-[14px] text-white mb-0.5 truncate">{bm.algo_name}</div>
+                      <div className={`text-[14px] mb-0.5 truncate font-medium ${isLight ? 'text-slate-800' : 'text-white'}`}>{bm.algo_name}</div>
                       <div
                         className="text-xs truncate"
-                        style={{ color: bm.bookmark_notes ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.3)' }}
+                        style={{ color: bm.bookmark_notes ? (isLight ? '#64748b' : 'rgba(255,255,255,0.5)') : (isLight ? '#94a3b8' : 'rgba(255,255,255,0.3)') }}
                       >
                         {bm.bookmark_notes || 'No notes attached'}
                       </div>
                     </div>
                     <button
                       onClick={() => removeBookmark(bm.algo_id)}
-                      className="remove-btn shrink-0 p-1"
+                      className="remove-btn shrink-0 p-1 cursor-pointer"
                       aria-label={`Remove ${bm.algo_name} bookmark`}
                     >
-                      <X size={14} style={{ color: 'rgba(255,255,255,0.55)' }} />
+                      <X size={14} style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.55)' }} />
                     </button>
                   </div>
                 ))}

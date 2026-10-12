@@ -4,6 +4,7 @@ import GraphVisualizer from './GraphVisualizer';
 import { useTheme } from '../../context/ThemeContext';
 
 const ArrayVisualizer = ({ state, algoId }) => {
+  const { isLight } = useTheme();
   if (!state || !state.array) return null;
 // ... (I'll just replace the whole Canvas function at the bottom)
 
@@ -189,7 +190,7 @@ const MatrixVisualizer = ({ state, algoId }) => {
       </div>
       
       <div className={`mt-8 flex flex-wrap justify-center gap-4 text-sm sticky left-0 transition-colors ${
-        document.documentElement.classList.contains('light') ? 'text-slate-600' : 'text-gray-300'
+        isLight ? 'text-slate-600' : 'text-gray-300'
       }`}>
          <div className="flex items-center"><span className="w-3 h-3 bg-blue-500 inline-block mr-2 rounded"></span> Active/Writing</div>
          <div className="flex items-center"><span className="w-3 h-3 bg-yellow-500 inline-block mr-2 rounded"></span> Comparing/Reading</div>

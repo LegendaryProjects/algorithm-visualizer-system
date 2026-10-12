@@ -4,7 +4,7 @@ const ThemeContext = createContext();
 
 export const ThemeProvider = ({ children }) => {
   const [theme, setTheme] = useState(() => {
-    return localStorage.getItem('algoviz-theme') || 'dark';
+    return localStorage.getItem('algoviz-theme') || 'light';
   });
 
   useEffect(() => {
@@ -39,9 +39,9 @@ export const useTheme = () => {
   const context = useContext(ThemeContext);
   if (!context) {
     return {
-      theme: 'dark',
+      theme: 'light',
       toggleTheme: () => {},
-      isLight: false
+      isLight: true
     };
   }
   return context;

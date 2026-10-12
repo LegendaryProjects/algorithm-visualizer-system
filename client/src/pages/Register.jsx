@@ -166,9 +166,16 @@ export default function Register() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold text-sm py-2.5 rounded-lg transition-all disabled:opacity-50 mt-4 cursor-pointer shadow-lg shadow-purple-600/20"
+          className="w-full font-semibold text-sm py-2.5 rounded-lg transition-all duration-200 disabled:opacity-50 mt-4 cursor-pointer shadow-md hover:shadow-lg active:scale-[0.99] flex items-center justify-center"
+          style={{
+            background: 'linear-gradient(135deg, #7c3aed 0%, #2563eb 100%)',
+            color: '#ffffff',
+            boxShadow: isLight ? '0 4px 14px 0 rgba(124, 58, 237, 0.35)' : '0 4px 14px 0 rgba(124, 58, 237, 0.45)'
+          }}
         >
-          {isSubmitting ? 'Creating account...' : 'Create Account'}
+          <span style={{ color: '#ffffff' }}>
+            {isSubmitting ? 'Creating account...' : 'Create Account'}
+          </span>
         </button>
       </form>
 
