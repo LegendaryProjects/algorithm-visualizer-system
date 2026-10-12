@@ -1,7 +1,9 @@
 import React, { useEffect, useRef } from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 const ExplanationPanel = ({ steps, currentStepIndex }) => {
   const containerRef = useRef(null);
+  const { isLight } = useTheme();
   
   useEffect(() => {
     if (containerRef.current) {
@@ -11,8 +13,12 @@ const ExplanationPanel = ({ steps, currentStepIndex }) => {
   }, [currentStepIndex]);
 
   return (
-    <div className="h-full bg-white/10 backdrop-blur-md shadow-xl rounded-xl border border-white/20 flex flex-col">
-      <div className="px-4 py-3 border-b border-white/20 bg-black/20 font-medium text-gray-200">
+    <div className={`h-full backdrop-blur-md rounded-xl flex flex-col transition-all duration-300 ${
+      isLight ? 'bg-white/90 border border-slate-200 shadow-sm text-slate-800' : 'bg-white/10 border border-white/20 shadow-xl text-white'
+    }`}>
+      <div className={`px-4 py-3 border-b font-semibold transition-colors ${
+        isLight ? 'bg-slate-50 border-slate-200 text-slate-700' : 'bg-black/20 border-white/20 text-gray-200'
+      }`}>
         Written explanation
       </div>
       <div 

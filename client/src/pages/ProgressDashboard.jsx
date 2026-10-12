@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import { Bookmark, CheckCircle2, Layers, Zap, Pin, X } from 'lucide-react';
 import TopNav from '../components/TopNav';
 
@@ -16,6 +17,7 @@ export default function ProgressDashboard() {
   const [history, setHistory] = useState([]);
   const [targetUserInfo, setTargetUserInfo] = useState(null);
   const { user } = useAuth();
+  const { isLight } = useTheme();
   const { userId: routeUserId } = useParams();
   
   // If a routeUserId is provided (e.g. admin viewing someone else), use it. Otherwise use current user.
@@ -77,11 +79,13 @@ export default function ProgressDashboard() {
   ];
 
   return (
-    <div className="min-h-screen flex flex-col bg-[#0b0f19]">
+    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${isLight ? 'bg-[#f8fafc] text-slate-900' : 'bg-[#0b0f19] text-white'}`}>
       <TopNav />
       <div className="glass relative flex-1 w-full overflow-y-auto overflow-x-hidden flex justify-center px-5 py-14 sm:py-20"
         style={{
-          background: 'linear-gradient(160deg, #1a1030 0%, #12142b 45%, #0b1224 100%)',
+          background: isLight 
+            ? 'linear-gradient(160deg, #f8fafc 0%, #f1f5f9 45%, #e2e8f0 100%)' 
+            : 'linear-gradient(160deg, #1a1030 0%, #12142b 45%, #0b1224 100%)',
         }}
       >
       <style>{`
@@ -95,32 +99,32 @@ export default function ProgressDashboard() {
         @keyframes drift3 { 0%,100% { transform: translate(0,0); } 50% { transform: translate(25px,40px); } }
 
         .pane {
-          background: rgba(255,255,255,0.055);
-          border: 1px solid rgba(255,255,255,0.12);
+          background: ${isLight ? 'rgba(255,255,255,0.92)' : 'rgba(255,255,255,0.055)'};
+          border: 1px solid ${isLight ? 'rgba(203,213,225,0.8)' : 'rgba(255,255,255,0.12)'};
           backdrop-filter: blur(22px);
           -webkit-backdrop-filter: blur(22px);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08);
+          box-shadow: ${isLight ? '0 10px 25px -5px rgba(15,23,42,0.06)' : '0 8px 32px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.08)'};
         }
         .pane-row {
-          border-top: 1px solid rgba(255,255,255,0.08);
+          border-top: 1px solid ${isLight ? '#f1f5f9' : 'rgba(255,255,255,0.08)'};
           transition: background 0.2s ease;
         }
-        .pane-row:hover { background: rgba(255,255,255,0.04); }
+        .pane-row:hover { background: ${isLight ? '#f8fafc' : 'rgba(255,255,255,0.04)'}; }
         .remove-btn { opacity: 0; transition: opacity 0.2s ease; }
         .pane-row:hover .remove-btn { opacity: 1; }
         .stat-card {
-          background: rgba(255,255,255,0.055);
-          border: 1px solid rgba(255,255,255,0.12);
+          background: ${isLight ? '#ffffff' : 'rgba(255,255,255,0.055)'};
+          border: 1px solid ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.12)'};
           backdrop-filter: blur(22px);
           -webkit-backdrop-filter: blur(22px);
-          box-shadow: 0 8px 32px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.08);
+          box-shadow: ${isLight ? '0 4px 12px -2px rgba(15,23,42,0.06)' : '0 8px 32px rgba(0,0,0,0.22), inset 0 1px 0 rgba(255,255,255,0.08)'};
           transition: transform 0.25s ease, border-color 0.25s ease;
         }
-        .stat-card:hover { transform: translateY(-2px); border-color: rgba(255,255,255,0.22); }
-        .bar-track { background: rgba(255,255,255,0.1); }
+        .stat-card:hover { transform: translateY(-2px); border-color: ${isLight ? '#cbd5e1' : 'rgba(255,255,255,0.22)'}; }
+        .bar-track { background: ${isLight ? '#e2e8f0' : 'rgba(255,255,255,0.1)'}; }
         .bar-fill { transition: width 0.6s ease; }
         .gradient-text {
-          background: linear-gradient(90deg, #A78BFA, #7DD3FC 55%, #5EEAD4);
+          background: linear-gradient(90deg, #7C3AED, #0284C7 55%, #0D9488);
           -webkit-background-clip: text;
           background-clip: text;
           color: transparent;
@@ -128,20 +132,20 @@ export default function ProgressDashboard() {
       `}</style>
 
       {/* ambient gradient orbs */}
-      <div className="orb" style={{ width: 420, height: 420, top: -140, left: -120, background: '#7C3AED', opacity: 0.35, animation: 'drift1 16s ease-in-out infinite' }} />
-      <div className="orb" style={{ width: 380, height: 380, top: 120, right: -140, background: '#0EA5E9', opacity: 0.3, animation: 'drift2 19s ease-in-out infinite' }} />
-      <div className="orb" style={{ width: 320, height: 320, bottom: -120, left: '30%', background: '#EC4899', opacity: 0.22, animation: 'drift3 21s ease-in-out infinite' }} />
+      <div className="orb" style={{ width: 420, height: 420, top: -140, left: -120, background: isLight ? '#A78BFA' : '#7C3AED', opacity: isLight ? 0.2 : 0.35, animation: 'drift1 16s ease-in-out infinite' }} />
+      <div className="orb" style={{ width: 380, height: 380, top: 120, right: -140, background: isLight ? '#38BDF8' : '#0EA5E9', opacity: isLight ? 0.18 : 0.3, animation: 'drift2 19s ease-in-out infinite' }} />
+      <div className="orb" style={{ width: 320, height: 320, bottom: -120, left: '30%', background: isLight ? '#F472B6' : '#EC4899', opacity: isLight ? 0.15 : 0.22, animation: 'drift3 21s ease-in-out infinite' }} />
 
       <div className="relative w-full max-w-4xl">
         {/* Header */}
         <div className="pane rounded-3xl animate-slide-up stagger-1 px-7 py-8 sm:px-9 sm:py-9 mb-6">
-          <p className="text-xs tracking-wide mb-3" style={{ color: 'rgba(255,255,255,0.55)' }}>
+          <p className="text-xs tracking-wide mb-3" style={{ color: isLight ? '#64748b' : 'rgba(255,255,255,0.55)' }}>
             Learning dashboard · {targetUserInfo?.username || 'Loading...'}
           </p>
           <h1 className="display gradient-text text-4xl sm:text-5xl font-semibold mb-2 leading-tight">
             {targetUserInfo?.id === user?.id ? 'Your progress, in focus' : `${targetUserInfo?.username}'s progress`}
           </h1>
-          <p className="text-[15px] max-w-md" style={{ color: 'rgba(255,255,255,0.6)' }}>
+          <p className="text-[15px] max-w-md" style={{ color: isLight ? '#475569' : 'rgba(255,255,255,0.6)' }}>
             {targetUserInfo?.id === user?.id ? "Every algorithm you've opened, finished, or set aside — gathered in one clear view." : "Every algorithm they've opened, finished, or set aside — gathered in one clear view."}
           </p>
         </div>

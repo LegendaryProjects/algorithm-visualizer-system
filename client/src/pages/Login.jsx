@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthLayout from '../components/Layout/AuthLayout';
 
+import { useTheme } from '../context/ThemeContext';
+
 export default function Login() {
   const [role, setRole] = useState('learner');
   const [credential, setCredential] = useState('');
@@ -10,6 +12,7 @@ export default function Login() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { login, sessionNotice, clearSessionNotice } = useAuth();
+  const { isLight } = useTheme();
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
@@ -30,22 +33,24 @@ export default function Login() {
   return (
     <AuthLayout>
       <div className="mb-6">
-        <h2 className="display text-2xl font-bold text-white tracking-tight">Sign In</h2>
-        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Enter your credentials to access the workspace</p>
+        <h2 className={`display text-2xl font-bold tracking-tight ${isLight ? 'text-slate-900' : 'text-white'}`}>Sign In</h2>
+        <p className={`text-xs mt-1 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Enter your credentials to access the workspace</p>
       </div>
 
       {/* Role Switch Tab */}
-      <div className="flex bg-white/5 p-1 rounded-lg border border-white/10 mb-6 backdrop-blur-md">
+      <div className={`flex p-1 rounded-lg border mb-6 backdrop-blur-md transition-colors ${
+        isLight ? 'bg-slate-100 border-slate-200' : 'bg-white/5 border-white/10'
+      }`}>
         <button
           type="button"
           onClick={() => {
             setRole('learner');
             setError('');
           }}
-          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all cursor-pointer ${
+          className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${
             role === 'learner'
-              ? 'bg-purple-600/80 text-white shadow-sm'
-              : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+              ? 'bg-purple-600 text-white shadow-sm'
+              : isLight ? 'text-slate-500 hover:text-slate-900 hover:bg-white' : 'text-white/50 hover:text-white/80 hover:bg-white/5'
           }`}
         >
           Learner
@@ -56,10 +61,10 @@ export default function Login() {
             setRole('admin');
             setError('');
           }}
-          className={`flex-1 py-2 text-xs font-medium rounded-md transition-all cursor-pointer ${
+          className={`flex-1 py-2 text-xs font-semibold rounded-md transition-all cursor-pointer ${
             role === 'admin'
-              ? 'bg-purple-600/80 text-white shadow-sm'
-              : 'text-white/50 hover:text-white/80 hover:bg-white/5'
+              ? 'bg-purple-600 text-white shadow-sm'
+              : isLight ? 'text-slate-500 hover:text-slate-900 hover:bg-white' : 'text-white/50 hover:text-white/80 hover:bg-white/5'
           }`}
         >
           Admin
@@ -67,12 +72,14 @@ export default function Login() {
       </div>
 
       {sessionNotice && (
-        <div className="mb-4 text-xs font-medium text-amber-300 bg-amber-950/40 border border-amber-800/50 px-3 py-2.5 rounded flex items-center justify-between">
+        <div className={`mb-4 text-xs font-medium px-3 py-2.5 rounded flex items-center justify-between border ${
+          isLight ? 'text-amber-800 bg-amber-50 border-amber-200' : 'text-amber-300 bg-amber-950/40 border-amber-800/50'
+        }`}>
           <span>{sessionNotice}</span>
           <button
             type="button"
             onClick={clearSessionNotice}
-            className="text-amber-400 hover:text-amber-200 ml-2 text-base leading-none cursor-pointer"
+            className="text-amber-500 hover:text-amber-700 ml-2 text-base leading-none cursor-pointer"
           >
             ×
           </button>
@@ -80,14 +87,16 @@ export default function Login() {
       )}
 
       {error && (
-        <div className="mb-4 text-xs font-medium text-red-400 bg-red-950/40 border border-red-900/50 px-3 py-2.5 rounded">
+        <div className={`mb-4 text-xs font-medium px-3 py-2.5 rounded border ${
+          isLight ? 'text-red-700 bg-red-50 border-red-200' : 'text-red-400 bg-red-950/40 border-red-900/50'
+        }`}>
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <label className={`block text-xs font-medium mb-1.5 ${isLight ? 'text-slate-700' : 'text-white/70'}`}>
             Username or Email
           </label>
           <input
@@ -96,12 +105,16 @@ export default function Login() {
             placeholder="Enter username or email"
             value={credential}
             onChange={(e) => setCredential(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 text-white text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-400 transition-colors placeholder:text-white/30"
+            className={`w-full text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-500 transition-colors border ${
+              isLight 
+                ? 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 shadow-sm' 
+                : 'bg-white/5 border-white/10 text-white placeholder:text-white/30'
+            }`}
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <label className={`block text-xs font-medium mb-1.5 ${isLight ? 'text-slate-700' : 'text-white/70'}`}>
             Password
           </label>
           <input
@@ -110,22 +123,28 @@ export default function Login() {
             placeholder="Enter password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 text-white text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-400 transition-colors placeholder:text-white/30"
+            className={`w-full text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-500 transition-colors border ${
+              isLight 
+                ? 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 shadow-sm' 
+                : 'bg-white/5 border-white/10 text-white placeholder:text-white/30'
+            }`}
           />
         </div>
 
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-medium text-sm py-2.5 rounded-lg transition-all disabled:opacity-50 mt-4 cursor-pointer shadow-lg shadow-purple-900/20"
+          className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold text-sm py-2.5 rounded-lg transition-all disabled:opacity-50 mt-4 cursor-pointer shadow-lg shadow-purple-600/20"
         >
           {isSubmitting ? 'Signing in...' : 'Sign In'}
         </button>
       </form>
 
-      <div className="mt-8 text-center text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+      <div className={`mt-8 text-center text-xs ${isLight ? 'text-slate-500' : 'text-white/50'}`}>
         Don't have an account?{' '}
-        <Link to="/register" className="text-white hover:text-purple-300 transition-colors hover:underline underline-offset-4">
+        <Link to="/register" className={`font-semibold hover:underline underline-offset-4 transition-colors ${
+          isLight ? 'text-purple-600 hover:text-purple-700' : 'text-white hover:text-purple-300'
+        }`}>
           Sign Up
         </Link>
       </div>

@@ -1,6 +1,7 @@
 import React from 'react';
 import TreeVisualizer from './TreeVisualizer';
 import GraphVisualizer from './GraphVisualizer';
+import { useTheme } from '../../context/ThemeContext';
 
 const ArrayVisualizer = ({ state, algoId }) => {
   if (!state || !state.array) return null;
@@ -187,7 +188,9 @@ const MatrixVisualizer = ({ state, algoId }) => {
         </table>
       </div>
       
-      <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm text-gray-300 sticky left-0">
+      <div className={`mt-8 flex flex-wrap justify-center gap-4 text-sm sticky left-0 transition-colors ${
+        document.documentElement.classList.contains('light') ? 'text-slate-600' : 'text-gray-300'
+      }`}>
          <div className="flex items-center"><span className="w-3 h-3 bg-blue-500 inline-block mr-2 rounded"></span> Active/Writing</div>
          <div className="flex items-center"><span className="w-3 h-3 bg-yellow-500 inline-block mr-2 rounded"></span> Comparing/Reading</div>
          <div className="flex items-center"><span className="w-3 h-3 bg-green-500 inline-block mr-2 rounded"></span> Solution Path</div>
@@ -197,8 +200,12 @@ const MatrixVisualizer = ({ state, algoId }) => {
 };
 
 const Canvas = ({ state, algoId }) => {
+  const { isLight } = useTheme();
+
   return (
-    <div className="w-full h-full bg-white/10 backdrop-blur-md rounded-xl shadow-xl border border-white/20 flex items-center justify-center overflow-hidden">
+    <div className={`w-full h-full backdrop-blur-md rounded-xl flex items-center justify-center overflow-hidden transition-all duration-300 ${
+      isLight ? 'bg-white/90 border border-slate-200 shadow-sm text-slate-800' : 'bg-white/10 border border-white/20 shadow-xl text-white'
+    }`}>
       {state ? (
         state.graph ? (
           <GraphVisualizer state={state} algoId={algoId} />
@@ -210,7 +217,7 @@ const Canvas = ({ state, algoId }) => {
           <ArrayVisualizer state={state} algoId={algoId} />
         )
       ) : (
-        <div className="text-gray-400 text-lg">Select an algorithm to begin</div>
+        <div className={`text-lg ${isLight ? 'text-slate-400' : 'text-gray-400'}`}>Select an algorithm to begin</div>
       )}
     </div>
   );

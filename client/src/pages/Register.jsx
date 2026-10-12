@@ -3,6 +3,8 @@ import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import AuthLayout from '../components/Layout/AuthLayout';
 
+import { useTheme } from '../context/ThemeContext';
+
 export default function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
@@ -10,6 +12,7 @@ export default function Register() {
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const { register } = useAuth();
+  const { isLight } = useTheme();
   const navigate = useNavigate();
 
   const calculateStrength = (pwd) => {
@@ -26,11 +29,11 @@ export default function Register() {
   const strength = calculateStrength(password);
 
   const getStrengthColor = (score) => {
-    if (score === 0) return 'bg-white/10';
-    if (score <= 2) return 'bg-red-400';
-    if (score === 3) return 'bg-amber-400';
-    if (score === 4) return 'bg-blue-400';
-    return 'bg-emerald-400';
+    if (score === 0) return isLight ? 'bg-slate-200' : 'bg-white/10';
+    if (score <= 2) return 'bg-red-500';
+    if (score === 3) return 'bg-amber-500';
+    if (score === 4) return 'bg-blue-500';
+    return 'bg-emerald-500';
   };
 
   const getStrengthLabel = (score) => {
@@ -42,10 +45,10 @@ export default function Register() {
   };
 
   const getStrengthTextColor = (score) => {
-    if (score <= 2) return '#f87171'; // red-400
-    if (score === 3) return '#fbbf24'; // amber-400
-    if (score === 4) return '#60a5fa'; // blue-400
-    return '#34d399'; // emerald-400
+    if (score <= 2) return '#ef4444'; // red-500
+    if (score === 3) return '#f59e0b'; // amber-500
+    if (score === 4) return '#3b82f6'; // blue-500
+    return '#10b981'; // emerald-500
   };
 
   const handleSubmit = async (e) => {
@@ -69,19 +72,21 @@ export default function Register() {
   return (
     <AuthLayout>
       <div className="mb-6">
-        <h2 className="display text-2xl font-bold text-white tracking-tight">Create Account</h2>
-        <p className="text-xs mt-1" style={{ color: 'rgba(255,255,255,0.6)' }}>Register a new profile to track your progress</p>
+        <h2 className={`display text-2xl font-bold tracking-tight ${isLight ? 'text-slate-900' : 'text-white'}`}>Create Account</h2>
+        <p className={`text-xs mt-1 ${isLight ? 'text-slate-500' : 'text-white/60'}`}>Register a new profile to track your progress</p>
       </div>
 
       {error && (
-        <div className="mb-4 text-xs font-medium text-red-400 bg-red-950/40 border border-red-900/50 px-3 py-2.5 rounded">
+        <div className={`mb-4 text-xs font-medium px-3 py-2.5 rounded border ${
+          isLight ? 'text-red-700 bg-red-50 border-red-200' : 'text-red-400 bg-red-950/40 border-red-900/50'
+        }`}>
           {error}
         </div>
       )}
 
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <label className={`block text-xs font-medium mb-1.5 ${isLight ? 'text-slate-700' : 'text-white/70'}`}>
             Username
           </label>
           <input
@@ -90,12 +95,16 @@ export default function Register() {
             placeholder="Choose a username"
             value={username}
             onChange={(e) => setUsername(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 text-white text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-400 transition-colors placeholder:text-white/30"
+            className={`w-full text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-500 transition-colors border ${
+              isLight 
+                ? 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 shadow-sm' 
+                : 'bg-white/5 border-white/10 text-white placeholder:text-white/30'
+            }`}
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <label className={`block text-xs font-medium mb-1.5 ${isLight ? 'text-slate-700' : 'text-white/70'}`}>
             Email
           </label>
           <input
@@ -104,12 +113,16 @@ export default function Register() {
             placeholder="name@example.com"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 text-white text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-400 transition-colors placeholder:text-white/30"
+            className={`w-full text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-500 transition-colors border ${
+              isLight 
+                ? 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 shadow-sm' 
+                : 'bg-white/5 border-white/10 text-white placeholder:text-white/30'
+            }`}
           />
         </div>
 
         <div>
-          <label className="block text-xs font-medium mb-1.5" style={{ color: 'rgba(255,255,255,0.7)' }}>
+          <label className={`block text-xs font-medium mb-1.5 ${isLight ? 'text-slate-700' : 'text-white/70'}`}>
             Password
           </label>
           <input
@@ -118,7 +131,11 @@ export default function Register() {
             placeholder="Minimum 8 characters"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
-            className="w-full bg-white/5 border border-white/10 text-white text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-400 transition-colors placeholder:text-white/30"
+            className={`w-full text-sm px-3.5 py-2.5 rounded-lg focus:outline-none focus:border-purple-500 transition-colors border ${
+              isLight 
+                ? 'bg-white border-slate-300 text-slate-900 placeholder:text-slate-400 shadow-sm' 
+                : 'bg-white/5 border-white/10 text-white placeholder:text-white/30'
+            }`}
           />
           
           {/* Password Strength Indicator */}
@@ -128,12 +145,14 @@ export default function Register() {
                 {[1, 2, 3, 4, 5].map((level) => (
                   <div 
                     key={level} 
-                    className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${strength >= level ? getStrengthColor(strength) : 'bg-white/10'}`}
+                    className={`h-1.5 flex-1 rounded-full transition-colors duration-300 ${
+                      strength >= level ? getStrengthColor(strength) : isLight ? 'bg-slate-200' : 'bg-white/10'
+                    }`}
                   />
                 ))}
               </div>
               <div className="flex justify-between items-center text-[11px] font-medium">
-                <span style={{ color: 'rgba(255,255,255,0.4)' }}>
+                <span className={isLight ? 'text-slate-500' : 'text-white/40'}>
                   {strength < 5 ? 'Use 8+ chars, mix cases, numbers & symbols' : 'Perfect!'}
                 </span>
                 <span style={{ color: getStrengthTextColor(strength) }}>
@@ -147,15 +166,17 @@ export default function Register() {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-medium text-sm py-2.5 rounded-lg transition-all disabled:opacity-50 mt-4 cursor-pointer shadow-lg shadow-purple-900/20"
+          className="w-full bg-gradient-to-r from-purple-600 to-cyan-600 hover:from-purple-500 hover:to-cyan-500 text-white font-semibold text-sm py-2.5 rounded-lg transition-all disabled:opacity-50 mt-4 cursor-pointer shadow-lg shadow-purple-600/20"
         >
           {isSubmitting ? 'Creating account...' : 'Create Account'}
         </button>
       </form>
 
-      <div className="mt-8 text-center text-xs" style={{ color: 'rgba(255,255,255,0.5)' }}>
+      <div className={`mt-8 text-center text-xs ${isLight ? 'text-slate-500' : 'text-white/50'}`}>
         Already have an account?{' '}
-        <Link to="/login" className="text-white hover:text-purple-300 transition-colors hover:underline underline-offset-4">
+        <Link to="/login" className={`font-semibold hover:underline underline-offset-4 transition-colors ${
+          isLight ? 'text-purple-600 hover:text-purple-700' : 'text-white hover:text-purple-300'
+        }`}>
           Sign In
         </Link>
       </div>

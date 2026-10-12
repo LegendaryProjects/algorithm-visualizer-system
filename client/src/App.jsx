@@ -9,6 +9,8 @@ import ProgressDashboard from './pages/ProgressDashboard';
 import EditAlgorithm from './pages/EditAlgorithm';
 import AddAlgorithm from './pages/AddAlgorithm';
 
+import { ThemeProvider } from './context/ThemeContext';
+
 const ProtectedRoute = ({ children }) => {
   const { user, loading } = useAuth();
   if (loading) {
@@ -20,7 +22,8 @@ const ProtectedRoute = ({ children }) => {
 export default function App() {
   return (
     <BrowserRouter>
-      <AuthProvider>
+      <ThemeProvider>
+        <AuthProvider>
         <Routes>
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
@@ -75,6 +78,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
       </AuthProvider>
+      </ThemeProvider>
     </BrowserRouter>
   );
 }

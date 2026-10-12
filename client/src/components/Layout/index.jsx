@@ -8,11 +8,13 @@ import Controls from '../Controls';
 import { useSimulationEngine } from '../../hooks/useSimulationEngine';
 import { Bookmark, Search } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
+import { useTheme } from '../../context/ThemeContext';
 import api from '../../services/api';
 
 const Layout = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const { user } = useAuth();
+  const { isLight } = useTheme();
   const [bookmarkedAlgoIds, setBookmarkedAlgoIds] = useState([]);
   const [maxStepReached, setMaxStepReached] = useState(0);
 
@@ -113,16 +115,22 @@ const Layout = () => {
   };
 
   return (
-    <div className="flex flex-col h-full w-full bg-[#0f172a] text-gray-200 font-sans p-4 overflow-hidden relative">
+    <div className={`flex flex-col h-full w-full font-sans p-4 overflow-hidden relative transition-colors duration-300 ${isLight ? 'bg-[#f8fafc] text-slate-800' : 'bg-[#0f172a] text-gray-200'}`}>
       {/* Background gradients for glassmorphism effect */}
-      <div className="absolute top-[-10%] left-[-10%] w-[40%] h-[40%] bg-blue-600/60 blur-[100px] rounded-full pointer-events-none"></div>
-      <div className="absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] bg-purple-600/60 blur-[100px] rounded-full pointer-events-none"></div>
+      <div className={`absolute top-[-10%] left-[-10%] w-[40%] h-[40%] blur-[100px] rounded-full pointer-events-none transition-opacity duration-300 ${isLight ? 'bg-blue-300/30' : 'bg-blue-600/60'}`}></div>
+      <div className={`absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] blur-[100px] rounded-full pointer-events-none transition-opacity duration-300 ${isLight ? 'bg-purple-300/30' : 'bg-purple-600/60'}`}></div>
 
       {/* Navbar & Algorithm Selector */}
-      <nav className="flex justify-between items-center mb-6 z-10 bg-white/10 backdrop-blur-md border border-white/20 p-2 rounded-xl shadow-xl animate-fade-in">
+      <nav className={`flex justify-between items-center mb-6 z-10 backdrop-blur-md p-2 rounded-xl shadow-md animate-fade-in transition-all duration-300 ${
+        isLight ? 'bg-white/90 border border-slate-200' : 'bg-white/10 border border-white/20 shadow-xl'
+      }`}>
         <div className="flex-1 flex justify-start pl-2">
           <select 
-            className="p-2 border border-white/30 rounded-md bg-[#1e293b] text-white shadow-sm focus:ring-blue-500 focus:border-blue-500 min-w-[250px] outline-none cursor-pointer"
+            className={`p-2 rounded-md shadow-sm min-w-[250px] outline-none cursor-pointer font-medium transition-colors ${
+              isLight 
+                ? 'bg-slate-50 border border-slate-300 text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
+                : 'bg-[#1e293b] border border-white/30 text-white focus:ring-blue-500 focus:border-blue-500'
+            }`}
             value={selectedAlgoId}
             onChange={(e) => selectAlgorithm(e.target.value)}
           >
@@ -141,7 +149,13 @@ const Layout = () => {
         <div className="flex justify-end flex-1 pr-2">
           <button 
             onClick={toggleBookmark}
-            className={`transition-colors p-2 rounded-full ${isBookmarked ? 'bg-pink-500/20 text-pink-400' : 'text-gray-300 hover:text-white hover:bg-white/10'}`}
+            className={`transition-colors p-2 rounded-full cursor-pointer ${
+              isBookmarked 
+                ? 'bg-pink-500/20 text-pink-500' 
+                : isLight 
+                  ? 'text-slate-400 hover:text-slate-800 hover:bg-slate-100' 
+                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+            }`}
             title={isBookmarked ? 'Remove Bookmark' : 'Bookmark Algorithm'}
           >
             <Bookmark size={24} fill={isBookmarked ? 'currentColor' : 'none'} />
@@ -172,17 +186,25 @@ const Layout = () => {
           </div>
           
           {/* Custom Input */}
-          <div className="flex-[1.5] min-h-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 flex flex-col justify-start items-center text-gray-400 overflow-y-auto overflow-x-hidden">
-            <p className="font-medium text-gray-300 mb-4 sticky top-0 bg-[#1e293b]/80 w-full text-center py-1 rounded">Custom Input</p>
+          <div className={`flex-[1.5] min-h-0 backdrop-blur-md rounded-xl p-4 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden transition-all duration-300 ${
+            isLight ? 'bg-white/90 border border-slate-200 text-slate-700 shadow-sm' : 'bg-white/10 border border-white/20 text-gray-400 shadow-xl'
+          }`}>
+            <p className={`font-semibold mb-4 sticky top-0 w-full text-center py-1.5 rounded transition-colors ${
+              isLight ? 'bg-slate-100 text-slate-800' : 'bg-[#1e293b]/80 text-gray-300'
+            }`}>Custom Input</p>
             
             {currentApiAlgo?.inputSchema ? (
               <div className="w-full space-y-4">
                 {currentApiAlgo.inputSchema.map(input => (
                   <div key={`${selectedAlgoId}-${input.name}`} className="w-full">
-                    <label className="block text-xs text-gray-400 mb-1">{input.label}</label>
+                    <label className={`block text-xs font-medium mb-1 ${isLight ? 'text-slate-500' : 'text-gray-400'}`}>{input.label}</label>
                     <input 
                       type="text"
-                      className="bg-black/20 p-2 rounded-lg w-full text-center text-sm border border-white/10 text-white focus:outline-none focus:border-blue-500"
+                      className={`p-2 rounded-lg w-full text-center text-sm border focus:outline-none transition-colors ${
+                        isLight 
+                          ? 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:bg-white' 
+                          : 'bg-black/20 border-white/10 text-white focus:border-blue-500'
+                      }`}
                       defaultValue={
                         input.type === 'array' && Array.isArray(customInput?.[input.name])
                           ? customInput[input.name].join(', ')
@@ -203,10 +225,14 @@ const Layout = () => {
               </div>
             ) : (
               <div className="w-full">
-                <label className="block text-xs text-gray-400 mb-1">Array</label>
+                <label className={`block text-xs font-medium mb-1 ${isLight ? 'text-slate-500' : 'text-gray-400'}`}>{input?.label || 'Array'}</label>
                 <input 
                   type="text"
-                  className="bg-black/20 p-2 rounded-lg w-full text-center text-sm border border-white/10 text-white focus:outline-none focus:border-blue-500"
+                  className={`p-2 rounded-lg w-full text-center text-sm border focus:outline-none transition-colors ${
+                    isLight 
+                      ? 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:bg-white' 
+                      : 'bg-black/20 border-white/10 text-white focus:border-blue-500'
+                  }`}
                   defaultValue={customInput?.array?.join(', ')}
                   onBlur={(e) => handleInputChange('array', e.target.value, 'array')}
                   onKeyDown={(e) => {
@@ -217,7 +243,7 @@ const Layout = () => {
               </div>
             )}
             
-            <p className="text-xs mt-4 text-gray-500 text-center">Press Enter to regenerate from step 0.</p>
+            <p className={`text-xs mt-4 text-center ${isLight ? 'text-slate-400' : 'text-gray-500'}`}>Press Enter to regenerate from step 0.</p>
           </div>
 
           {/* Progress & bookmarks */}

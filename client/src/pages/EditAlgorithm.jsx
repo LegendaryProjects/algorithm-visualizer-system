@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import api from '../services/api';
 import { useAuth } from '../context/AuthContext';
+import { useTheme } from '../context/ThemeContext';
 import TopNav from '../components/TopNav';
 
 export default function EditAlgorithm() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
+  const { isLight } = useTheme();
   const [formData, setFormData] = useState({
     name: '',
     category: '',
@@ -67,10 +69,10 @@ export default function EditAlgorithm() {
   if (loading) return <div className="p-8 text-white">Loading...</div>;
 
   return (
-    <div className="min-h-screen bg-[#0b0f19] text-white flex flex-col">
+    <div className={`min-h-screen flex flex-col transition-colors duration-300 ${isLight ? 'bg-[#f8fafc] text-slate-900' : 'bg-[#0b0f19] text-white'}`}>
       <TopNav />
       <div className="p-8 flex-1 max-w-4xl mx-auto w-full">
-        <h1 className="text-3xl font-bold mb-6">Edit Algorithm: {id}</h1>
+        <h1 className={`text-3xl font-bold mb-6 ${isLight ? 'text-slate-900' : 'text-white'}`}>Edit Algorithm: {id}</h1>
         
         <form onSubmit={handleSave} className="space-y-6">
           <div className="bg-[#15171c] p-6 rounded-xl border border-gray-800 space-y-4">

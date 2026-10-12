@@ -2,6 +2,8 @@ import React from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 
+import ThemeToggle from './ThemeToggle';
+
 export default function TopNav() {
   const { user, logout } = useAuth();
   const navigate = useNavigate();
@@ -12,7 +14,7 @@ export default function TopNav() {
   };
 
   return (
-    <header className="h-16 border-b border-[#27272a] px-8 flex items-center justify-between bg-[#141416] shrink-0 animate-fade-in">
+    <header className="h-16 border-b border-[#27272a] px-8 flex items-center justify-between bg-[#141416] shrink-0 animate-fade-in transition-colors duration-300">
       <div className="flex items-center space-x-3">
         <span className="text-sm font-semibold tracking-wide text-white">Algorithm Visualizer System</span>
       </div>
@@ -28,6 +30,7 @@ export default function TopNav() {
       </div>
       
       <div className="flex items-center space-x-4">
+        <ThemeToggle />
         <div className="text-right">
           <p className="text-xs font-medium text-neutral-200">{user?.username}</p>
           <p className="text-[11px] text-neutral-400 capitalize">{user?.role}</p>

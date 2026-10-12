@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 const StatePanel = ({ state }) => {
+  const { isLight } = useTheme();
   if (!state) return null;
 
   // Filter out internal or large data structures for this simple table view
@@ -16,16 +18,20 @@ const StatePanel = ({ state }) => {
   });
 
   return (
-    <div className="h-full bg-white/10 backdrop-blur-md shadow-xl rounded-xl border border-white/20 flex flex-col">
-      <div className="px-4 py-3 border-b border-white/20 bg-black/20 font-medium text-gray-200">
+    <div className={`h-full backdrop-blur-md rounded-xl flex flex-col transition-all duration-300 ${
+      isLight ? 'bg-white/90 border border-slate-200 shadow-sm text-slate-800' : 'bg-white/10 border border-white/20 shadow-xl text-white'
+    }`}>
+      <div className={`px-4 py-3 border-b font-semibold transition-colors ${
+        isLight ? 'bg-slate-50 border-slate-200 text-slate-700' : 'bg-black/20 border-white/20 text-gray-200'
+      }`}>
         Live state
       </div>
       <div className="flex-grow p-4 overflow-y-auto">
-        <table className="w-full text-sm text-left text-gray-300">
-          <thead className="text-xs text-gray-400 uppercase bg-black/20">
+        <table className={`w-full text-sm text-left ${isLight ? 'text-slate-700' : 'text-gray-300'}`}>
+          <thead className={`text-xs uppercase ${isLight ? 'bg-slate-100 text-slate-500' : 'bg-black/20 text-gray-400'}`}>
             <tr>
-              <th scope="col" className="px-4 py-2 border-b border-white/10">Variable</th>
-              <th scope="col" className="px-4 py-2 border-b border-white/10">Value</th>
+              <th scope="col" className={`px-4 py-2 border-b ${isLight ? 'border-slate-200' : 'border-white/10'}`}>Variable</th>
+              <th scope="col" className={`px-4 py-2 border-b ${isLight ? 'border-slate-200' : 'border-white/10'}`}>Value</th>
             </tr>
           </thead>
           <tbody>
