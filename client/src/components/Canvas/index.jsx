@@ -102,6 +102,7 @@ const ArrayVisualizer = ({ state, algoId }) => {
 };
 
 const MatrixVisualizer = ({ state, algoId }) => {
+  const { isLight } = useTheme();
   if (!state || !state.matrix) return null;
 
   const { 
@@ -123,13 +124,17 @@ const MatrixVisualizer = ({ state, algoId }) => {
 
   return (
     <div className="flex flex-col items-center justify-start w-full h-full p-4 pt-8 overflow-auto">
-      <div className="inline-block min-w-max bg-black/20 p-4 rounded-xl border border-white/10">
+      <div className={`inline-block min-w-max p-4 rounded-xl border transition-colors duration-300 ${
+        isLight ? 'bg-slate-50 border-slate-200 shadow-sm' : 'bg-black/20 border-white/10'
+      }`}>
         <table className="border-collapse">
           <thead>
             <tr>
               {rowLabels && colLabels && <th></th>}
               {colLabels && colLabels.map((label, c) => (
-                <th key={`col-${c}`} className="p-2 text-gray-400 font-mono text-sm font-normal">
+                <th key={`col-${c}`} className={`p-2 font-mono text-sm font-medium ${
+                  isLight ? 'text-slate-600' : 'text-gray-400'
+                }`}>
                   {label}
                 </th>
               ))}
@@ -139,21 +144,29 @@ const MatrixVisualizer = ({ state, algoId }) => {
             {matrix.map((row, r) => (
               <tr key={`row-${r}`}>
                 {rowLabels && (
-                  <td className="p-2 text-gray-400 font-mono text-sm text-right pr-4 border-r border-white/10">
+                  <td className={`p-2 font-mono text-sm text-right pr-4 border-r ${
+                    isLight ? 'text-slate-600 border-slate-200' : 'text-gray-400 border-white/10'
+                  }`}>
                     {rowLabels[r]}
                   </td>
                 )}
                 {row.map((val, c) => {
-                  let bgColor = 'bg-[#1e293b]';
-                  let textColor = 'text-white';
-                  let borderColor = 'border-white/10';
+                  let bgColor = isLight ? 'bg-white' : 'bg-[#1e293b]';
+                  let textColor = isLight ? 'text-slate-800' : 'text-white';
+                  let borderColor = isLight ? 'border-slate-300' : 'border-white/10';
                   
                   if (algoId === 'nQueens') {
                     // Chessboard pattern
-                    bgColor = (r + c) % 2 === 0 ? 'bg-gray-800' : 'bg-gray-600';
+                    if (isLight) {
+                      bgColor = (r + c) % 2 === 0 ? 'bg-amber-100' : 'bg-amber-700/80';
+                      textColor = (r + c) % 2 === 0 ? 'text-slate-900' : 'text-white';
+                    } else {
+                      bgColor = (r + c) % 2 === 0 ? 'bg-gray-800' : 'bg-gray-600';
+                      textColor = 'text-white';
+                    }
                     if (val === 1) {
                       val = '♛';
-                      textColor = 'text-yellow-400 text-xl';
+                      textColor = isLight ? 'text-amber-900 text-2xl font-bold' : 'text-yellow-400 text-2xl';
                     } else {
                       val = '';
                     }
@@ -162,22 +175,25 @@ const MatrixVisualizer = ({ state, algoId }) => {
                   if (complete && algoId !== 'nQueens') {
                      if (isCellInArray(r, c, pathCells)) {
                          bgColor = 'bg-green-600';
+                         textColor = 'text-white';
                      }
                   } else {
                     if (isCellInArray(r, c, comparingCells)) {
-                      bgColor = 'bg-yellow-500';
-                      textColor = 'text-gray-900';
+                      bgColor = 'bg-yellow-400';
+                      textColor = 'text-gray-900 font-bold';
                     } else if (isCellInArray(r, c, activeCells)) {
                       bgColor = 'bg-blue-500';
+                      textColor = 'text-white font-bold';
                     } else if (isCellInArray(r, c, pathCells)) {
                       bgColor = 'bg-green-500';
+                      textColor = 'text-white font-bold';
                     }
                   }
 
                   return (
                     <td 
                       key={`cell-${r}-${c}`} 
-                      className={`w-12 h-12 text-center align-middle border ${borderColor} ${bgColor} ${textColor} transition-colors duration-300`}
+                      className={`w-12 h-12 text-center align-middle font-medium border ${borderColor} ${bgColor} ${textColor} transition-colors duration-300`}
                     >
                       {val !== null && val !== undefined ? val : ''}
                     </td>
@@ -193,7 +209,7 @@ const MatrixVisualizer = ({ state, algoId }) => {
         isLight ? 'text-slate-600' : 'text-gray-300'
       }`}>
          <div className="flex items-center"><span className="w-3 h-3 bg-blue-500 inline-block mr-2 rounded"></span> Active/Writing</div>
-         <div className="flex items-center"><span className="w-3 h-3 bg-yellow-500 inline-block mr-2 rounded"></span> Comparing/Reading</div>
+         <div className="flex items-center"><span className="w-3 h-3 bg-yellow-400 inline-block mr-2 rounded"></span> Comparing/Reading</div>
          <div className="flex items-center"><span className="w-3 h-3 bg-green-500 inline-block mr-2 rounded"></span> Solution Path</div>
       </div>
     </div>

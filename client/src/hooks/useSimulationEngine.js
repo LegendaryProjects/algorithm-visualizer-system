@@ -46,9 +46,13 @@ export const useSimulationEngine = () => {
     const localAlgo = localAlgorithms[selectedAlgoId];
     const apiAlgo = apiAlgorithms.find(a => a.id === selectedAlgoId);
     
-    if (localAlgo && customInput) {
+    if (localAlgo) {
+      const inputToUse = (customInput && Object.keys(customInput).length > 0)
+        ? customInput
+        : (apiAlgo?.defaultInput || localAlgo.defaultInput);
+
       try {
-        const generatedSteps = localAlgo.generateSteps(customInput, apiAlgo?.templates);
+        const generatedSteps = localAlgo.generateSteps(inputToUse, apiAlgo?.templates);
         setSteps(generatedSteps);
         setCurrentStepIndex(0);
         setIsPlaying(false);
@@ -88,10 +92,11 @@ export const useSimulationEngine = () => {
   const selectAlgorithm = useCallback((algoId) => {
     setSelectedAlgoId(algoId);
     const apiAlgo = apiAlgorithms.find(a => a.id === algoId);
-    if (apiAlgo) {
+    const localAlgo = localAlgorithms[algoId];
+    if (apiAlgo?.defaultInput && Object.keys(apiAlgo.defaultInput).length > 0) {
        setCustomInput(apiAlgo.defaultInput);
-    } else {
-       setCustomInput(localAlgorithms[algoId].defaultInput);
+    } else if (localAlgo?.defaultInput) {
+       setCustomInput(localAlgo.defaultInput);
     }
   }, [apiAlgorithms]);
 

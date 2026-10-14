@@ -1,6 +1,8 @@
 import React from 'react';
+import { useTheme } from '../../context/ThemeContext';
 
 const TreeVisualizer = ({ state, algoId }) => {
+  const { isLight } = useTheme();
   if (!state || !state.treeRoot) return null;
 
   const { treeRoot, activeNodeId, comparingNodeIds, foundNodeIds } = state;
@@ -128,10 +130,12 @@ const TreeVisualizer = ({ state, algoId }) => {
         })}
       </svg>
       
-      <div className="mt-8 flex flex-wrap justify-center gap-4 text-sm text-gray-300 sticky left-0">
+      <div className={`mt-8 flex flex-wrap justify-center gap-4 text-sm sticky left-0 transition-colors ${
+        isLight ? 'text-slate-600' : 'text-gray-300'
+      }`}>
          <div className="flex items-center"><span className="w-3 h-3 border-2 border-blue-500 bg-[#1e293b] inline-block mr-2 rounded-full"></span> Default Node</div>
          <div className="flex items-center"><span className="w-3 h-3 bg-blue-500 inline-block mr-2 rounded-full"></span> Active Node</div>
-         <div className="flex items-center"><span className="w-3 h-3 bg-yellow-500 inline-block mr-2 rounded-full"></span> Comparing</div>
+         <div className="flex items-center"><span className="w-3 h-3 bg-yellow-400 inline-block mr-2 rounded-full"></span> Comparing</div>
          <div className="flex items-center"><span className="w-3 h-3 bg-green-500 inline-block mr-2 rounded-full"></span> Found/Result</div>
       </div>
     </div>

@@ -13,10 +13,10 @@ export const lcsData = {
   },
   generateSteps: function(input, templates = {}) {
     const steps = [];
-    let X = input.string1;
-    let Y = input.string2;
-    let m = X.length;
-    let n = Y.length;
+    const X = typeof input?.string1 === 'string' && input.string1.length > 0 ? input.string1 : 'AGGTAB';
+    const Y = typeof input?.string2 === 'string' && input.string2.length > 0 ? input.string2 : 'GXTXAYB';
+    const m = X.length;
+    const n = Y.length;
 
     let L = Array(m + 1).fill().map(() => Array(n + 1).fill(null));
     

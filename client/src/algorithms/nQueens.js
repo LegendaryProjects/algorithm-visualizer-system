@@ -12,7 +12,7 @@ export const nQueensData = {
   },
   generateSteps: function(input, templates = {}) {
     const steps = [];
-    let n = input.n;
+    let n = typeof input?.n === 'number' && input.n > 0 ? input.n : 4;
     if (n > 8) n = 8; // Cap for visualizer
 
     let board = Array(n).fill().map(() => Array(n).fill(0));

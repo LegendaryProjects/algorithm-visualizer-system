@@ -14,10 +14,10 @@ export const knapsackData = {
   },
   generateSteps: function(input, templates = {}) {
     const steps = [];
-    let wt = [...input.weights];
-    let val = [...input.values];
-    let W = input.capacity;
-    let n = wt.length;
+    const wt = Array.isArray(input?.weights) ? [...input.weights] : [1, 2, 3, 5];
+    const val = Array.isArray(input?.values) ? [...input.values] : [10, 15, 40, 50];
+    const W = typeof input?.capacity === 'number' && input.capacity >= 0 ? input.capacity : 6;
+    const n = Math.min(wt.length, val.length);
 
     let dp = Array(n + 1).fill().map(() => Array(W + 1).fill(null));
     

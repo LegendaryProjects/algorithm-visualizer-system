@@ -12,7 +12,7 @@ export const floydWarshallData = {
   },
   generateSteps: function(input, templates = {}) {
     const steps = [];
-    let V = input.vertices;
+    let V = typeof input?.vertices === 'number' && input.vertices > 0 ? input.vertices : 4;
     if (V > 6) V = 6; // Cap for visualizer
 
     const INF = 999;
