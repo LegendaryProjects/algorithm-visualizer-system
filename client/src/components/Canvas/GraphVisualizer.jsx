@@ -20,13 +20,13 @@ const GraphVisualizer = ({ state, algoId }) => {
       <svg width={SVG_WIDTH} height={SVG_HEIGHT} className="overflow-visible min-h-[400px]">
         <defs>
           <marker id="arrowhead-default" markerWidth="10" markerHeight="7" refX="25" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#475569" />
+            <polygon points="0 0, 10 3.5, 0 7" fill={isLight ? "#94a3b8" : "#475569"} />
           </marker>
           <marker id="arrowhead-active" markerWidth="10" markerHeight="7" refX="25" refY="3.5" orient="auto">
             <polygon points="0 0, 10 3.5, 0 7" fill="#3b82f6" />
           </marker>
           <marker id="arrowhead-path" markerWidth="10" markerHeight="7" refX="25" refY="3.5" orient="auto">
-            <polygon points="0 0, 10 3.5, 0 7" fill="#22c55e" />
+            <polygon points="0 0, 10 3.5, 0 7" fill="#10b981" />
           </marker>
         </defs>
         
@@ -37,12 +37,12 @@ const GraphVisualizer = ({ state, algoId }) => {
 
           const edgeId = edge.id || `${edge.source}-${edge.target}`;
           
-          let strokeColor = '#475569';
+          let strokeColor = isLight ? '#cbd5e1' : '#475569';
           let markerEnd = edge.isDirected ? 'url(#arrowhead-default)' : '';
           let strokeWidth = '2';
 
           if (isPathEdge(edgeId)) {
-            strokeColor = '#22c55e'; // Green
+            strokeColor = '#10b981'; // Emerald
             strokeWidth = '3';
             if (edge.isDirected) markerEnd = 'url(#arrowhead-path)';
           } else if (isActiveEdge(edgeId)) {
@@ -70,8 +70,8 @@ const GraphVisualizer = ({ state, algoId }) => {
                 <text 
                   x={midX} 
                   y={midY - 8} 
-                  fill="#94a3b8" 
-                  fontSize="14"
+                  fill={isLight ? "#475569" : "#94a3b8"} 
+                  fontSize="13"
                   fontWeight="bold"
                   textAnchor="middle"
                 >
@@ -83,20 +83,22 @@ const GraphVisualizer = ({ state, algoId }) => {
         })}
         
         {graph.nodes && graph.nodes.map((node) => {
-          let bgColor = '#1e293b'; // Default dark
-          let strokeColor = '#3b82f6'; // Blue border
-          let textColor = '#ffffff';
+          let bgColor = isLight ? '#ffffff' : '#1e293b';
+          let strokeColor = '#3b82f6';
+          let textColor = isLight ? '#0f172a' : '#ffffff';
           
           if (isFound(node.id)) {
-            bgColor = '#22c55e'; // Green
-            strokeColor = '#16a34a';
+            bgColor = '#10b981'; // Green
+            strokeColor = '#059669';
+            textColor = '#ffffff';
           } else if (node.id === activeNodeId) {
             bgColor = '#3b82f6'; // Blue
-            strokeColor = '#2563eb';
+            strokeColor = '#1d4ed8';
+            textColor = '#ffffff';
           } else if (isComparing(node.id)) {
-            bgColor = '#eab308'; // Yellow
-            strokeColor = '#ca8a04';
-            textColor = '#1e293b';
+            bgColor = '#f59e0b'; // Amber
+            strokeColor = '#d97706';
+            textColor = '#ffffff';
           }
 
           return (
@@ -107,8 +109,8 @@ const GraphVisualizer = ({ state, algoId }) => {
                 r="18" 
                 fill={bgColor} 
                 stroke={strokeColor} 
-                strokeWidth="3"
-                className="transition-all duration-300"
+                strokeWidth="2.5"
+                className="transition-all duration-300 drop-shadow-xs"
               />
               <text 
                 x={node.x} 
@@ -126,8 +128,9 @@ const GraphVisualizer = ({ state, algoId }) => {
                   x={node.x} 
                   y={node.y - 25} 
                   textAnchor="middle" 
-                  fill="#94a3b8" 
+                  fill={isLight ? "#64748b" : "#94a3b8"} 
                   fontSize="12"
+                  fontWeight="600"
                 >
                   {node.distance === Infinity ? '∞' : node.distance}
                 </text>
@@ -137,13 +140,27 @@ const GraphVisualizer = ({ state, algoId }) => {
         })}
       </svg>
       
-      <div className={`mt-8 flex flex-wrap justify-center gap-4 text-sm sticky left-0 transition-colors ${
-        isLight ? 'text-slate-600' : 'text-gray-300'
-      }`}>
-         <div className="flex items-center"><span className="w-3 h-3 border-2 border-blue-500 bg-[#1e293b] inline-block mr-2 rounded-full"></span> Default</div>
-         <div className="flex items-center"><span className="w-3 h-3 bg-blue-500 inline-block mr-2 rounded-full"></span> Active</div>
-         <div className="flex items-center"><span className="w-3 h-3 bg-yellow-400 inline-block mr-2 rounded-full"></span> Processing</div>
-         <div className="flex items-center"><span className="w-3 h-3 bg-green-500 inline-block mr-2 rounded-full"></span> Visited/Result</div>
+      <div className="mt-8 flex flex-wrap justify-center gap-2 text-xs font-medium sticky left-0">
+        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border transition-colors ${
+          isLight ? 'bg-white/90 border-slate-200/90 text-slate-700 shadow-2xs' : 'bg-white/5 border-white/10 text-gray-300'
+        }`}>
+          <span className={`w-2.5 h-2.5 border-2 border-blue-500 ${isLight ? 'bg-white' : 'bg-[#1e293b]'} rounded-full`}></span> Default
+        </div>
+        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border transition-colors ${
+          isLight ? 'bg-white/90 border-slate-200/90 text-slate-700 shadow-2xs' : 'bg-white/5 border-white/10 text-gray-300'
+        }`}>
+          <span className="w-2.5 h-2.5 bg-blue-500 rounded-full"></span> Active
+        </div>
+        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border transition-colors ${
+          isLight ? 'bg-white/90 border-slate-200/90 text-slate-700 shadow-2xs' : 'bg-white/5 border-white/10 text-gray-300'
+        }`}>
+          <span className="w-2.5 h-2.5 bg-amber-500 rounded-full"></span> Processing
+        </div>
+        <div className={`flex items-center gap-1.5 px-3 py-1 rounded-full border transition-colors ${
+          isLight ? 'bg-white/90 border-slate-200/90 text-slate-700 shadow-2xs' : 'bg-white/5 border-white/10 text-gray-300'
+        }`}>
+          <span className="w-2.5 h-2.5 bg-emerald-500 rounded-full"></span> Visited / Path
+        </div>
       </div>
     </div>
   );

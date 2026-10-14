@@ -114,21 +114,53 @@ const Layout = () => {
     setCustomInput(prev => ({ ...prev, [inputName]: parsedVal }));
   };
 
+  const currentAlgo = displayAlgorithms.find(a => a.id === selectedAlgoId);
+
+  const getCategoryBadgeClass = (category) => {
+    switch (category) {
+      case 'Sorting':
+        return isLight ? 'bg-blue-50 text-blue-700 border-blue-200' : 'bg-blue-500/20 text-blue-300 border-blue-400/30';
+      case 'Dynamic Programming':
+        return isLight ? 'bg-purple-50 text-purple-700 border-purple-200' : 'bg-purple-500/20 text-purple-300 border-purple-400/30';
+      case 'Graphs':
+        return isLight ? 'bg-cyan-50 text-cyan-700 border-cyan-200' : 'bg-cyan-500/20 text-cyan-300 border-cyan-400/30';
+      case 'Trees':
+        return isLight ? 'bg-emerald-50 text-emerald-700 border-emerald-200' : 'bg-emerald-500/20 text-emerald-300 border-emerald-400/30';
+      case 'Searching':
+        return isLight ? 'bg-amber-50 text-amber-700 border-amber-200' : 'bg-amber-500/20 text-amber-300 border-amber-400/30';
+      case 'Backtracking':
+        return isLight ? 'bg-rose-50 text-rose-700 border-rose-200' : 'bg-rose-500/20 text-rose-300 border-rose-400/30';
+      default:
+        return isLight ? 'bg-slate-100 text-slate-700 border-slate-200' : 'bg-white/10 text-gray-200 border-white/20';
+    }
+  };
+
   return (
-    <div className={`flex flex-col h-full w-full font-sans p-4 overflow-hidden relative transition-colors duration-300 ${isLight ? 'bg-[#f8fafc] text-slate-800' : 'bg-[#0f172a] text-gray-200'}`}>
+    <div className={`flex flex-col h-full w-full font-sans p-4 overflow-hidden relative transition-colors duration-300 ${
+      isLight 
+        ? 'bg-gradient-to-br from-slate-50 via-indigo-50/25 to-sky-50/20 text-slate-800' 
+        : 'bg-[#0f172a] text-gray-200'
+    }`}>
       {/* Background gradients for glassmorphism effect */}
-      <div className={`absolute top-[-10%] left-[-10%] w-[40%] h-[40%] blur-[100px] rounded-full pointer-events-none transition-opacity duration-300 ${isLight ? 'bg-blue-300/30' : 'bg-blue-600/60'}`}></div>
-      <div className={`absolute bottom-[-10%] right-[-10%] w-[40%] h-[40%] blur-[100px] rounded-full pointer-events-none transition-opacity duration-300 ${isLight ? 'bg-purple-300/30' : 'bg-purple-600/60'}`}></div>
+      <div className={`absolute top-[-10%] left-[-10%] w-[45%] h-[45%] blur-[120px] rounded-full pointer-events-none transition-opacity duration-300 ${
+        isLight ? 'bg-blue-300/35' : 'bg-blue-600/60'
+      }`}></div>
+      <div className={`absolute bottom-[-10%] right-[-10%] w-[45%] h-[45%] blur-[120px] rounded-full pointer-events-none transition-opacity duration-300 ${
+        isLight ? 'bg-purple-300/30' : 'bg-purple-600/60'
+      }`}></div>
+      <div className={`absolute top-[35%] right-[25%] w-[35%] h-[35%] blur-[130px] rounded-full pointer-events-none transition-opacity duration-300 ${
+        isLight ? 'bg-emerald-200/25' : 'bg-indigo-900/20'
+      }`}></div>
 
       {/* Navbar & Algorithm Selector */}
-      <nav className={`flex justify-between items-center mb-6 z-10 backdrop-blur-md p-2 rounded-xl shadow-md animate-fade-in transition-all duration-300 ${
-        isLight ? 'bg-white/90 border border-slate-200' : 'bg-white/10 border border-white/20 shadow-xl'
+      <nav className={`flex justify-between items-center mb-5 z-10 backdrop-blur-md p-2.5 rounded-xl transition-all duration-300 ${
+        isLight ? 'bg-white/95 border border-slate-200/90 shadow-xs' : 'bg-white/10 border border-white/20 shadow-xl'
       }`}>
-        <div className="flex-1 flex justify-start pl-2">
+        <div className="flex-1 flex items-center justify-start gap-3 pl-1">
           <select 
-            className={`p-2 rounded-md shadow-sm min-w-[250px] outline-none cursor-pointer font-medium transition-colors ${
+            className={`px-3 py-2 rounded-lg shadow-2xs min-w-[240px] outline-none cursor-pointer text-sm font-semibold transition-all ${
               isLight 
-                ? 'bg-slate-50 border border-slate-300 text-slate-800 focus:border-blue-500 focus:ring-1 focus:ring-blue-500' 
+                ? 'bg-white border border-slate-200 text-slate-800 hover:border-slate-300 focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100' 
                 : 'bg-[#1e293b] border border-white/30 text-white focus:ring-blue-500 focus:border-blue-500'
             }`}
             value={selectedAlgoId}
@@ -136,29 +168,42 @@ const Layout = () => {
           >
             {displayAlgorithms.map(algo => (
               <option key={algo.id} value={algo.id}>
-                {bookmarkedAlgoIds.includes(algo.id) ? '📌 ' : ''}{algo.name} ({algo.category})
+                {bookmarkedAlgoIds.includes(algo.id) ? '📌 ' : ''}{algo.name}
               </option>
             ))}
           </select>
+
+          {currentAlgo?.category && (
+            <span className={`text-xs font-semibold px-2.5 py-1 rounded-full border shadow-2xs hidden sm:inline-block ${getCategoryBadgeClass(currentAlgo.category)}`}>
+              {currentAlgo.category}
+            </span>
+          )}
         </div>
         
-        <div className="flex justify-center flex-1">
-          {/* Empty center */}
+        <div className="flex justify-center items-center flex-1">
+          <span className={`text-xs font-medium px-3 py-1 rounded-full hidden md:inline-block ${
+            isLight ? 'bg-slate-100 text-slate-600 border border-slate-200/60' : 'bg-white/5 text-gray-300 border border-white/10'
+          }`}>
+            Interactive Algorithm Canvas
+          </span>
         </div>
         
-        <div className="flex justify-end flex-1 pr-2">
+        <div className="flex justify-end flex-1 pr-1">
           <button 
             onClick={toggleBookmark}
-            className={`transition-colors p-2 rounded-full cursor-pointer ${
+            className={`transition-all duration-200 p-2 rounded-xl flex items-center gap-1.5 text-xs font-semibold cursor-pointer border ${
               isBookmarked 
-                ? 'bg-pink-500/20 text-pink-500' 
+                ? isLight
+                  ? 'bg-rose-50 text-rose-600 border-rose-200 shadow-2xs'
+                  : 'bg-rose-500/20 text-rose-400 border-rose-400/30'
                 : isLight 
-                  ? 'text-slate-400 hover:text-slate-800 hover:bg-slate-100' 
-                  : 'text-gray-300 hover:text-white hover:bg-white/10'
+                  ? 'bg-slate-50 text-slate-600 hover:text-slate-900 hover:bg-slate-100 border-slate-200/70 shadow-2xs' 
+                  : 'bg-white/5 text-gray-300 hover:text-white hover:bg-white/10 border-white/10'
             }`}
             title={isBookmarked ? 'Remove Bookmark' : 'Bookmark Algorithm'}
           >
-            <Bookmark size={24} fill={isBookmarked ? 'currentColor' : 'none'} />
+            <Bookmark size={16} fill={isBookmarked ? 'currentColor' : 'none'} />
+            <span className="hidden sm:inline">{isBookmarked ? 'Pinned' : 'Pin'}</span>
           </button>
         </div>
       </nav>
@@ -187,22 +232,22 @@ const Layout = () => {
           
           {/* Custom Input */}
           <div className={`flex-[1.5] min-h-0 backdrop-blur-md rounded-xl p-4 flex flex-col justify-start items-center overflow-y-auto overflow-x-hidden transition-all duration-300 ${
-            isLight ? 'bg-white/90 border border-slate-200 text-slate-700 shadow-sm' : 'bg-white/10 border border-white/20 text-gray-400 shadow-xl'
+            isLight ? 'bg-white/95 border border-slate-200/90 text-slate-700 shadow-xs' : 'bg-white/10 border border-white/20 text-gray-400 shadow-xl'
           }`}>
-            <p className={`font-semibold mb-4 sticky top-0 w-full text-center py-1.5 rounded transition-colors ${
-              isLight ? 'bg-slate-100 text-slate-800' : 'bg-[#1e293b]/80 text-gray-300'
+            <p className={`font-semibold mb-3 sticky top-0 w-full text-center py-1.5 rounded-lg text-xs tracking-wider uppercase transition-colors ${
+              isLight ? 'bg-gradient-to-r from-slate-50 via-indigo-50/40 to-slate-50 border border-slate-200/80 text-slate-800 shadow-2xs' : 'bg-[#1e293b]/80 text-gray-300 border border-white/10'
             }`}>Custom Input</p>
             
             {currentApiAlgo?.inputSchema ? (
-              <div className="w-full space-y-4">
+              <div className="w-full space-y-3.5">
                 {currentApiAlgo.inputSchema.map(input => (
                   <div key={`${selectedAlgoId}-${input.name}`} className="w-full">
-                    <label className={`block text-xs font-medium mb-1 ${isLight ? 'text-slate-500' : 'text-gray-400'}`}>{input.label}</label>
+                    <label className={`block text-xs font-semibold mb-1 ${isLight ? 'text-slate-600' : 'text-gray-400'}`}>{input.label}</label>
                     <input 
                       type="text"
-                      className={`p-2 rounded-lg w-full text-center text-sm border focus:outline-none transition-colors ${
+                      className={`p-2 rounded-lg w-full text-center text-sm border font-mono transition-all ${
                         isLight 
-                          ? 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:bg-white' 
+                          ? 'bg-slate-50/70 border-slate-200 text-slate-900 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-2xs' 
                           : 'bg-black/20 border-white/10 text-white focus:border-blue-500'
                       }`}
                       defaultValue={
@@ -225,12 +270,12 @@ const Layout = () => {
               </div>
             ) : (
               <div className="w-full">
-                <label className={`block text-xs font-medium mb-1 ${isLight ? 'text-slate-500' : 'text-gray-400'}`}>Array</label>
+                <label className={`block text-xs font-semibold mb-1 ${isLight ? 'text-slate-600' : 'text-gray-400'}`}>Array Elements</label>
                 <input 
                   type="text"
-                  className={`p-2 rounded-lg w-full text-center text-sm border focus:outline-none transition-colors ${
+                  className={`p-2 rounded-lg w-full text-center text-sm border font-mono transition-all ${
                     isLight 
-                      ? 'bg-slate-50 border-slate-300 text-slate-900 focus:border-blue-500 focus:bg-white' 
+                      ? 'bg-slate-50/70 border-slate-200 text-slate-900 focus:bg-white focus:border-indigo-500 focus:ring-2 focus:ring-indigo-100 shadow-2xs' 
                       : 'bg-black/20 border-white/10 text-white focus:border-blue-500'
                   }`}
                   defaultValue={customInput?.array?.join(', ')}
@@ -243,20 +288,66 @@ const Layout = () => {
               </div>
             )}
             
-            <p className={`text-xs mt-4 text-center ${isLight ? 'text-slate-400' : 'text-gray-500'}`}>Press Enter to regenerate from step 0.</p>
+            <p className={`text-[11px] mt-auto pt-3 text-center ${isLight ? 'text-slate-400 font-medium' : 'text-gray-500'}`}>
+              Press Enter to regenerate from step 0
+            </p>
           </div>
 
           {/* Progress & bookmarks */}
-          <div className="flex-[1.5] min-h-0 bg-white/10 backdrop-blur-md border border-white/20 rounded-xl p-4 flex flex-col justify-center items-center">
-             <p className="font-medium text-gray-300 mb-4 text-center">Progress & bookmarks</p>
-             <p className="text-white font-semibold mb-2">Completed: <span className="text-blue-400">{currentStepIndex + 1} / {steps.length}</span></p>
-             <p className="text-gray-400 text-sm mb-4">Bookmarked: <span className="text-gray-500 italic">none yet</span></p>
-             <div className="w-full bg-black/30 rounded-full h-2">
-               <div 
-                 className="bg-green-500 h-2 rounded-full transition-all duration-300"
-                 style={{ width: `${steps.length > 1 ? (currentStepIndex / (steps.length - 1)) * 100 : 0}%` }}
-               ></div>
-             </div>
+          <div className={`flex-[1.5] min-h-0 backdrop-blur-md rounded-xl p-4 flex flex-col justify-between transition-all duration-300 ${
+            isLight 
+              ? 'bg-white/95 border border-slate-200/90 shadow-xs text-slate-800' 
+              : 'bg-white/10 border border-white/20 shadow-xl text-white'
+          }`}>
+            <div className={`w-full flex items-center justify-between pb-2 border-b ${
+              isLight ? 'border-slate-100' : 'border-white/10'
+            }`}>
+              <span className={`text-xs font-semibold uppercase tracking-wider ${
+                isLight ? 'text-slate-500' : 'text-gray-400'
+              }`}>
+                Progress & Pinned
+              </span>
+              {isBookmarked ? (
+                <span className={`text-[11px] font-semibold px-2 py-0.5 rounded-full border ${
+                  isLight ? 'bg-rose-50 text-rose-600 border-rose-200' : 'bg-rose-500/20 text-rose-300 border-rose-400/30'
+                }`}>
+                  Pinned
+                </span>
+              ) : (
+                <span className={`text-[11px] font-medium px-2 py-0.5 rounded-full border ${
+                  isLight ? 'bg-slate-100 text-slate-500 border-slate-200/60' : 'bg-white/5 text-gray-400 border-white/10'
+                }`}>
+                  Unpinned
+                </span>
+              )}
+            </div>
+
+            <div className="w-full my-auto space-y-2">
+              <div className="flex justify-between items-center text-xs">
+                <span className={isLight ? 'text-slate-600 font-medium' : 'text-gray-300'}>Simulation Progress</span>
+                <span className={`font-mono font-bold ${isLight ? 'text-indigo-600' : 'text-blue-400'}`}>
+                  {steps.length > 0 ? Math.round((currentStepIndex / Math.max(steps.length - 1, 1)) * 100) : 0}%
+                </span>
+              </div>
+              
+              <div className={`w-full rounded-full h-2 overflow-hidden ${
+                isLight ? 'bg-slate-100 border border-slate-200/70' : 'bg-black/30'
+              }`}>
+                <div 
+                  className="bg-gradient-to-r from-blue-500 via-indigo-500 to-emerald-400 h-2 rounded-full transition-all duration-300"
+                  style={{ width: `${steps.length > 1 ? (currentStepIndex / (steps.length - 1)) * 100 : 0}%` }}
+                ></div>
+              </div>
+
+              <div className="flex justify-between items-center text-[11px] pt-1">
+                <span className={isLight ? 'text-slate-400 font-medium' : 'text-gray-500'}>
+                  Step {Math.min(currentStepIndex + 1, steps.length)} of {steps.length}
+                </span>
+                <span className={isLight ? 'text-slate-500 font-medium' : 'text-gray-400'}>
+                  {bookmarkedAlgoIds.length} pinned total
+                </span>
+              </div>
+            </div>
           </div>
         </div>
 
